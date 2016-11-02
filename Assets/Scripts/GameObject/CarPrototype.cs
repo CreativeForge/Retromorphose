@@ -3,8 +3,11 @@ using System.Collections;
 
 public class CarPrototype : MonoBehaviour
 {
+	[SerializeField] ushort playerNr = 1;
+
 	[SerializeField] float maxSteeringAngle = 30f;
-	[SerializeField] float maxTorque = 500f;
+	[SerializeField] float maxTorque = 100f;
+	[SerializeField] float wheelFriction = 10f;
 
 	[SerializeField] Transform centerOfMass;
 
@@ -12,6 +15,8 @@ public class CarPrototype : MonoBehaviour
 	[SerializeField] Transform[] wheels = new Transform[4];
 
 	private Rigidbody _rigidbody;
+
+	private bool isGrounded = true;
 
 	// Use this for initialization
 	void Start()
@@ -28,8 +33,12 @@ public class CarPrototype : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		float steeringAxis = Input.GetAxis("Horizontal") * maxSteeringAngle;
-		float torque = Input.GetAxis("Vertical") * maxTorque;
+		float steeringAxis = Input.GetAxis("P" + playerNr.ToString() + " Horizontal") * maxSteeringAngle;
+		float torque = Input.GetAxis("P" + playerNr.ToString() + " Vertical") * maxTorque;
+		float groundingForce = _rigidbody.velocity.magnitude * wheelFriction;
+
+		// Is car grounded?
+		IsGrounded();
 
 		wheelColliders[0].steerAngle = steeringAxis;
 		wheelColliders[1].steerAngle = steeringAxis;
@@ -38,17 +47,22 @@ public class CarPrototype : MonoBehaviour
 		wheelColliders[1].motorTorque = torque;
 		wheelColliders[2].motorTorque = torque;
 		wheelColliders[3].motorTorque = torque;
-
+		/*
 		if(torque == 0f)
 		{
-			wheelColliders[0].brakeTorque = 30f;
-			wheelColliders[1].brakeTorque = 30f;
+			wheelColliders[0].brakeTorque = 3f;
+			wheelColliders[1].brakeTorque = 3f;
 		}
 		else
 		{
 			wheelColliders[0].brakeTorque = 0f;
 			wheelColliders[1].brakeTorque = 0f;
 		}
+		*/
+		if(!isGrounded)
+			groundingForce *= 0.15f;
+		
+		_rigidbody.AddForce(Vector3.up * -groundingForce);
 	}
 
 	void UpdateWheelPosition()
@@ -68,5 +82,14 @@ public class CarPrototype : MonoBehaviour
 			wheels[i].Rotate(new Vector3(0f, 0f, 90f));
 		}
 
+	}
+
+	void IsGrounded()
+	{
+		isGrounded = true;
+		foreach(WheelCollider currentWheel in wheelColliders)
+		{
+			isGrounded &= currentWheel.isGrounded;
+		}
 	}
 }
