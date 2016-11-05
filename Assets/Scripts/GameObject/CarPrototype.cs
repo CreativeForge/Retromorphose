@@ -3,8 +3,7 @@ using System.Collections;
 
 public class CarPrototype : MonoBehaviour
 {
-	[SerializeField] ushort playerNr = 1;
-
+	// Serialized
 	[SerializeField] float maxSteeringAngle = 30f;
 	[SerializeField] float maxTorque = 100f;
 	[SerializeField] float wheelFriction = 10f;
@@ -14,55 +13,63 @@ public class CarPrototype : MonoBehaviour
 	[SerializeField] WheelCollider[] wheelColliders = new WheelCollider[4];
 	[SerializeField] Transform[] wheels = new Transform[4];
 
+	// On initialization
 	private Rigidbody _rigidbody;
 
+	// Variables
 	private bool isGrounded = true;
+	private bool isUsed = false;
+	private GameObject playerObject;
+	private ushort playerID = 0;
 
-	// Use this for initialization
+
+	// Initialization
 	void Start()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
 		_rigidbody.centerOfMass = centerOfMass.localPosition;
 	}
 	
-	// Update is called once per frame
+	// Once per frame
 	void Update()
 	{
 		UpdateWheelPosition();
+
+		// Stop car?
+		if(isUsed && Input.GetKeyDown(KeyCode.Space))
+		{
+			StopCar();
+		}
 	}
 
+	// Physics
 	void FixedUpdate()
 	{
-		float steeringAxis = Input.GetAxis("P" + playerNr.ToString() + " Horizontal") * maxSteeringAngle;
-		float torque = Input.GetAxis("P" + playerNr.ToString() + " Vertical") * maxTorque;
-		float groundingForce = _rigidbody.velocity.magnitude * wheelFriction;
 
-		// Is car grounded?
-		IsGrounded();
+		float groundingForce = _rigidbody.velocity.magnitude * wheelFriction;									// Calculate grounding force
 
-		wheelColliders[0].steerAngle = steeringAxis;
-		wheelColliders[1].steerAngle = steeringAxis;
-
-		wheelColliders[0].motorTorque = torque;
-		wheelColliders[1].motorTorque = torque;
-		wheelColliders[2].motorTorque = torque;
-		wheelColliders[3].motorTorque = torque;
-		/*
-		if(torque == 0f)
+		// Player drives the car?
+		if(isUsed)
 		{
-			wheelColliders[0].brakeTorque = 3f;
-			wheelColliders[1].brakeTorque = 3f;
+			float steeringAxis = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * maxSteeringAngle;		// Steering angle through input
+			float torque = Input.GetAxis("P" + playerID.ToString() + " Vertical") * maxTorque;						// Torque through input
+
+			// Car steering
+			wheelColliders[0].steerAngle = steeringAxis;
+			wheelColliders[1].steerAngle = steeringAxis;
+
+			// Car toque
+			wheelColliders[0].motorTorque = torque;
+			wheelColliders[1].motorTorque = torque;
+			wheelColliders[2].motorTorque = torque;
+			wheelColliders[3].motorTorque = torque;
 		}
-		else
-		{
-			wheelColliders[0].brakeTorque = 0f;
-			wheelColliders[1].brakeTorque = 0f;
-		}
-		*/
-		if(!isGrounded)
+
+		// Grounding force release
+		if(!IsGrounded)
 			groundingForce *= 0.15f;
-		
-		_rigidbody.AddForce(Vector3.up * -groundingForce);
+
+		_rigidbody.AddForce(Vector3.down * groundingForce);
 	}
 
 	void UpdateWheelPosition()
@@ -84,12 +91,53 @@ public class CarPrototype : MonoBehaviour
 
 	}
 
-	void IsGrounded()
+
+	// Public Methods
+
+	// Player drives car
+	public void StartCar(ushort playerID)
 	{
-		isGrounded = true;
-		foreach(WheelCollider currentWheel in wheelColliders)
+		GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+		// Search player which wants to drive
+		foreach(GameObject iteratePlayer in players)
 		{
-			isGrounded &= currentWheel.isGrounded;
+			ushort id = iteratePlayer.GetComponent<PlayerPrototype>().PlayerID;
+
+			if(id == playerID)
+			{
+				this.playerID = playerID;
+				this.playerObject = iteratePlayer;
+			}
+		}
+
+		this.playerObject.SetActive(false);
+		this.isUsed = true;
+	}
+
+	// Player drives car
+	public void StopCar()
+	{
+		isUsed = false;
+		playerObject.SetActive(true);
+	}
+
+
+	// Properties
+
+	// Is car grounded? (Read only)
+	public bool IsGrounded
+	{
+		get
+		{
+			this.isGrounded = true;
+
+			foreach(WheelCollider currentWheel in wheelColliders)
+			{
+				this.isGrounded &= currentWheel.isGrounded;
+			}
+
+			return this.isGrounded;
 		}
 	}
 }
