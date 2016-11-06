@@ -22,4 +22,12 @@ public class CameraFollow : MonoBehaviour
 		transform.position = Vector3.Slerp(transform.position, target.position + new Vector3(distanceToTarget, height), Time.deltaTime * smooth);
 		transform.LookAt(target);
 	}
+
+	// Public methods
+
+	// Change target to follow
+	public void ChangeTarget(Transform newTarget)
+	{
+		target = newTarget;
+	}
 }

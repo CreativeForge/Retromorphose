@@ -13,6 +13,8 @@ public class CarPrototype : MonoBehaviour
 	[SerializeField] WheelCollider[] wheelColliders = new WheelCollider[4];
 	[SerializeField] Transform[] wheels = new Transform[4];
 
+	[SerializeField] float fuel = 100f;
+
 	// On initialization
 	private Rigidbody _rigidbody;
 
@@ -58,11 +60,21 @@ public class CarPrototype : MonoBehaviour
 			wheelColliders[0].steerAngle = steeringAxis;
 			wheelColliders[1].steerAngle = steeringAxis;
 
-			// Car toque
-			wheelColliders[0].motorTorque = torque;
-			wheelColliders[1].motorTorque = torque;
-			wheelColliders[2].motorTorque = torque;
-			wheelColliders[3].motorTorque = torque;
+			// Car torque (enough fuel?)
+			if(fuel > 0f)
+			{
+				foreach(WheelCollider iterateWheels in wheelColliders)
+					iterateWheels.motorTorque = torque;
+
+				// Fuel consumption
+				fuel -= 0.001f * Mathf.Abs(torque);
+			}
+			else
+			{
+				foreach(WheelCollider iterateWheels in wheelColliders)
+					iterateWheels.motorTorque = 0f;
+			}
+
 		}
 
 		// Grounding force release
@@ -108,18 +120,54 @@ public class CarPrototype : MonoBehaviour
 			{
 				this.playerID = playerID;
 				this.playerObject = iteratePlayer;
+				break;
 			}
 		}
 
 		this.playerObject.SetActive(false);
 		this.isUsed = true;
+
+		// Camera follow
+		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().ChangeTarget(transform);
 	}
 
-	// Player drives car
+	// Player leaves car
 	public void StopCar()
 	{
+		Vector3 hitBoxCenter = transform.FindChild("LeftDoor").GetComponent<Collider>().bounds.center;
+		Vector3 hitBoxExtents = transform.FindChild("LeftDoor").GetComponent<Collider>().bounds.extents;
+
+		Collider[] hitColliders = Physics.OverlapBox(hitBoxCenter, hitBoxExtents * 0.5f, transform.rotation);
+
+		// Vehicle door is blocked
+		if(hitColliders.Length > 1)
+		{
+			// Try door on the right
+			hitBoxCenter = transform.FindChild("RightDoor").GetComponent<Collider>().bounds.center;
+			hitBoxExtents = transform.FindChild("RightDoor").GetComponent<Collider>().bounds.extents;
+			hitColliders = Physics.OverlapBox(hitBoxCenter, hitBoxExtents * 0.5f, transform.rotation);
+
+			// Door blocked too
+			if(hitColliders.Length > 1)
+			{
+				return;
+			}
+		}
+
 		isUsed = false;
+		playerObject.transform.position = hitBoxCenter;
+		playerObject.transform.rotation = Quaternion.Euler(new Vector3(0f, transform.rotation.eulerAngles.y));
 		playerObject.SetActive(true);
+
+		// Camera follow
+		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().ChangeTarget(playerObject.transform);
+
+		// Stop car driving physics
+		foreach(WheelCollider iterateWheels in wheelColliders)
+		{
+			iterateWheels.steerAngle = 0f;
+			iterateWheels.motorTorque = 0f;
+		}
 	}
 
 
@@ -139,5 +187,12 @@ public class CarPrototype : MonoBehaviour
 
 			return this.isGrounded;
 		}
+	}
+
+	// Vehicle fuel status
+	public float Fuel
+	{
+		get { return this.fuel; }
+		set { this.fuel = value; }
 	}
 }
