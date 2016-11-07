@@ -49,7 +49,7 @@ public class PlayerPrototype : MonoBehaviour
 		// Position, Gravity
 		if(!isGrounded)
 		{
-			_rigidbody.velocity += -transform.up;
+			_rigidbody.velocity -= transform.up;
 		}
 		else
 		{
@@ -72,6 +72,7 @@ public class PlayerPrototype : MonoBehaviour
 				{
 					// Drive that car
 					jump = false;
+					isGrounded = false;
 					nearObject.transform.parent.GetComponent<CarPrototype>().StartCar(playerID);
 				}
 			}

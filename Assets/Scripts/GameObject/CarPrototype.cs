@@ -14,6 +14,7 @@ public class CarPrototype : MonoBehaviour
 	[SerializeField] Transform[] wheels = new Transform[4];
 
 	[SerializeField] float fuel = 100f;
+	[SerializeField] float damage = 0f;
 
 	// On initialization
 	private Rigidbody _rigidbody;
@@ -84,6 +85,27 @@ public class CarPrototype : MonoBehaviour
 		_rigidbody.AddForce(Vector3.down * groundingForce);
 	}
 
+	// Collision
+	void OnCollisionEnter(Collision collisionInfo)
+	{
+		//print(collisionInfo.contacts[0].normal);
+		//print(collisionInfo.relativeVelocity);
+		//print(Mathf.Pow(Mathf.Abs(Mathf.Cos(Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity))), 2f) * collisionInfo.relativeVelocity.magnitude);
+		//Debug.DrawRay(collisionInfo.contacts[0].point, collisionInfo.relativeVelocity);
+		//Debug.DrawRay(collisionInfo.contacts[0].point, collisionInfo.contacts[0].normal * 10f, Color.green);
+		//Debug.LogError("Ray");
+
+		float collisionAngle = Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity.normalized);
+		float damageMulti = Mathf.Pow(Mathf.Abs(Mathf.Cos(collisionAngle)), 2f) * collisionInfo.relativeVelocity.magnitude;
+		print(damageMulti);
+		if(damageMulti > 5f)
+		{
+			damage += damageMulti * 0.5f;
+		}
+
+	}
+
+	// Wheel object transform
 	void UpdateWheelPosition()
 	{
 		for(int i = 0;i < wheelColliders.Length;i++)
@@ -168,6 +190,14 @@ public class CarPrototype : MonoBehaviour
 			iterateWheels.steerAngle = 0f;
 			iterateWheels.motorTorque = 0f;
 		}
+	}
+
+	// Damage car
+	public void MakeDamage(float damage)
+	{
+		this.damage += damage;
+
+		// driveable?
 	}
 
 

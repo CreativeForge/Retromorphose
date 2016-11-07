@@ -43,7 +43,6 @@ GameObject:
   - 4: {fileID: 417474}
   - 33: {fileID: 3370152}
   - 23: {fileID: 2394344}
-  - 65: {fileID: 6577756}
   m_Layer: 0
   m_Name: TestCar
   m_TagString: Untagged
@@ -143,6 +142,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 431398}
   - 54: {fileID: 5470516}
+  - 65: {fileID: 65000013427722032}
   - 114: {fileID: 11499666}
   m_Layer: 0
   m_Name: TestCar
@@ -193,7 +193,7 @@ GameObject:
   m_Layer: 0
   m_Name: CenterOfMass
   m_TagString: Untagged
-  m_Icon: {fileID: 4476612413928447662, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: -6042967201622091453, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -561,18 +561,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &6577756
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 113052}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.000001, y: 5.200002, z: 1}
-  m_Center: {x: -0.000000059604645, y: -0.20000038, z: 0.99}
 --- !u!114 &11499666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -598,6 +586,8 @@ MonoBehaviour:
   - {fileID: 455908}
   - {fileID: 428124}
   - {fileID: 496316}
+  fuel: 100
+  damage: 0
 --- !u!146 &14617410
 WheelCollider:
   m_ObjectHideFlags: 1
@@ -807,3 +797,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65000013427722032
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 164426}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 0.92, z: 5.2}
+  m_Center: {x: 0, y: 1, z: 0.21}
