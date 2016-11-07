@@ -18,6 +18,7 @@ public class CarPrototype : MonoBehaviour
 
 	// On initialization
 	private Rigidbody _rigidbody;
+	private SmokeEmitter _smokeEmitter;
 
 	// Variables
 	private bool isGrounded = true;
@@ -29,6 +30,7 @@ public class CarPrototype : MonoBehaviour
 	// Initialization
 	void Start()
 	{
+		_smokeEmitter = GetComponent<SmokeEmitter>();
 		_rigidbody = GetComponent<Rigidbody>();
 		_rigidbody.centerOfMass = centerOfMass.localPosition;
 	}
@@ -69,11 +71,17 @@ public class CarPrototype : MonoBehaviour
 
 				// Fuel consumption
 				fuel -= 0.001f * Mathf.Abs(torque);
+
+				// Smoke amount
+				_smokeEmitter.Amount = (uint)Mathf.RoundToInt(_rigidbody.velocity.magnitude) * 2 + 10;
 			}
 			else
 			{
 				foreach(WheelCollider iterateWheels in wheelColliders)
 					iterateWheels.motorTorque = 0f;
+
+				// Smoke amount
+				_smokeEmitter.Amount = 0;
 			}
 
 		}
@@ -88,16 +96,9 @@ public class CarPrototype : MonoBehaviour
 	// Collision
 	void OnCollisionEnter(Collision collisionInfo)
 	{
-		//print(collisionInfo.contacts[0].normal);
-		//print(collisionInfo.relativeVelocity);
-		//print(Mathf.Pow(Mathf.Abs(Mathf.Cos(Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity))), 2f) * collisionInfo.relativeVelocity.magnitude);
-		//Debug.DrawRay(collisionInfo.contacts[0].point, collisionInfo.relativeVelocity);
-		//Debug.DrawRay(collisionInfo.contacts[0].point, collisionInfo.contacts[0].normal * 10f, Color.green);
-		//Debug.LogError("Ray");
-
 		float collisionAngle = Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity.normalized);
 		float damageMulti = Mathf.Pow(Mathf.Abs(Mathf.Cos(collisionAngle)), 2f) * collisionInfo.relativeVelocity.magnitude;
-		print(damageMulti);
+
 		if(damageMulti > 5f)
 		{
 			damage += damageMulti * 0.5f;
@@ -148,6 +149,7 @@ public class CarPrototype : MonoBehaviour
 
 		this.playerObject.SetActive(false);
 		this.isUsed = true;
+		_smokeEmitter.SetActive(true);
 
 		// Camera follow
 		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().ChangeTarget(transform);
@@ -190,6 +192,9 @@ public class CarPrototype : MonoBehaviour
 			iterateWheels.steerAngle = 0f;
 			iterateWheels.motorTorque = 0f;
 		}
+
+		// Stop smoke
+		_smokeEmitter.SetActive(false);
 	}
 
 	// Damage car

@@ -11,17 +11,22 @@ public class PlayerPrototype : MonoBehaviour
 
 	// On initialization
 	private Rigidbody _rigidbody;
+	private Animator _anim;
+	private SmokeEmitter _smokeEmitter;
 
 	// Variables
-	private bool isGrounded = false;
+	private bool isGrounded = false;		// Is player grounded?
 	private uint ignoreGrounded = 0;		// How many frames should ground collision be ignored? (isGrounded fix)
-	private bool actionButton = false;
+	private bool actionButton = false;		// Action-button
+	private bool smokeEmitter = false;		// Should emit smoke?
 
 
 	// Initialization
 	void Start()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
+		_anim = GetComponent<Animator>();
+		_smokeEmitter = GetComponent<SmokeEmitter>();
 	}
 
 	void Update()
@@ -41,7 +46,14 @@ public class PlayerPrototype : MonoBehaviour
 	void FixedUpdate()
 	{
 		float rotation = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * turnSpeed;		// Turn value
-		float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical") * walkSpeed;			// Walk speed value
+		float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical");						// Walk speed value
+		smokeEmitter = speed > 0f ? true : false;													// Walking player should emit smoke
+
+		// Animation
+		_anim.SetFloat("Speed", Mathf.Abs(speed));
+
+		// Generate walking-speed
+		speed *= walkSpeed;
 
 		// Rotation
 		transform.Rotate(Vector3.up * rotation);
@@ -54,6 +66,12 @@ public class PlayerPrototype : MonoBehaviour
 		else
 		{
 			_rigidbody.velocity = transform.forward * speed;
+
+			// Emit smoke?
+			if(smokeEmitter)
+				_smokeEmitter.SetActive(true);
+			else
+				_smokeEmitter.SetActive(false);
 		}
 
 		// Action-Button
@@ -111,6 +129,7 @@ public class PlayerPrototype : MonoBehaviour
 	void OnCollisionExit(Collision collisionInfo)
 	{
 		isGrounded = false;
+		_smokeEmitter.SetActive(false);
 	}
 
 
