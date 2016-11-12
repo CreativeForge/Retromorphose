@@ -9,18 +9,23 @@ public class CameraFollow : MonoBehaviour
 	[SerializeField] private float smooth = 5f;
 
 	private float distanceToTarget;
+	private Vector3 velocity;
 
-	// Use this for initialization
+	// Initialization
 	void Start()
 	{
-		distanceToTarget = Mathf.Tan(angle) * height;
+		velocity = Vector3.zero;
+
+		ChangeTarget(target);
 	}
 	
-	// Update is called once per frame
-	void Update()
+	// Physics
+	void FixedUpdate()
 	{
-		transform.position = Vector3.Slerp(transform.position, target.position + new Vector3(distanceToTarget, height), Time.deltaTime * smooth);
-		transform.LookAt(target);
+		Vector3 movePosition = target.position + new Vector3(distanceToTarget, height);
+		float distanceBetween = Vector3.Distance(transform.position, movePosition);
+
+		transform.position = Vector3.SmoothDamp(transform.position, movePosition, ref velocity, smooth);
 	}
 
 	// Public methods
@@ -34,5 +39,12 @@ public class CameraFollow : MonoBehaviour
 			height = 10f;
 		else
 			height = 20f;
+
+		// Camero move and look at
+		distanceToTarget = Mathf.Tan(angle) * height;
+
+		Vector3 movePosition = target.position + new Vector3(distanceToTarget, height);
+		transform.position = movePosition;
+		transform.LookAt(target);
 	}
 }

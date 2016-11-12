@@ -642,7 +642,7 @@ MonoBehaviour:
   target: {fileID: 1669716965}
   height: 20
   angle: 10
-  smooth: 1000
+  smooth: 0.2
 --- !u!1 &1044486541
 GameObject:
   m_ObjectHideFlags: 0
