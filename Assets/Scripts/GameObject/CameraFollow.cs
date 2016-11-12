@@ -29,5 +29,10 @@ public class CameraFollow : MonoBehaviour
 	public void ChangeTarget(Transform newTarget)
 	{
 		target = newTarget;
+
+		if(newTarget.tag == "Player")
+			height = 10f;
+		else
+			height = 20f;
 	}
 }

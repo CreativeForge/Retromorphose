@@ -1,159 +1,162 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerPrototype : MonoBehaviour
+namespace OilSpill
 {
-	[SerializeField] private ushort playerID = 1;
-	[SerializeField] private float walkSpeed = 5f;
-	[SerializeField] private float turnSpeed = 3f;
-	[SerializeField] private float jumpForce = 3f;
-	[SerializeField] private float interactionRadius = 0.8f;
-
-	// On initialization
-	private Rigidbody _rigidbody;
-	private Animator _anim;
-	private SmokeEmitter _smokeEmitter;
-
-	// Variables
-	private bool isGrounded = false;		// Is player grounded?
-	private uint ignoreGrounded = 0;		// How many frames should ground collision be ignored? (isGrounded fix)
-	private bool actionButton = false;		// Action-button
-	private bool smokeEmitter = false;		// Should emit smoke?
-
-
-	// Initialization
-	void Start()
+	public class PlayerPrototype : MonoBehaviour
 	{
-		_rigidbody = GetComponent<Rigidbody>();
-		_anim = GetComponent<Animator>();
-		_smokeEmitter = GetComponent<SmokeEmitter>();
-	}
+		[SerializeField] private ushort playerID = 1;
+		[SerializeField] private float walkSpeed = 5f;
+		[SerializeField] private float turnSpeed = 3f;
+		[SerializeField] private float jumpForce = 3f;
+		[SerializeField] private float interactionRadius = 0.8f;
 
-	void Update()
-	{
-		// Action-Button
-		if(Input.GetKeyDown(KeyCode.Space))
+		// On initialization
+		private Rigidbody _rigidbody;
+		private Animator _anim;
+		private SmokeEmitter _smokeEmitter;
+
+		// Variables
+		private bool isGrounded = false;		// Is player grounded?
+		private uint ignoreGrounded = 0;		// How many frames should ground collision be ignored? (isGrounded fix)
+		private bool actionButton = false;		// Action-button
+		private bool smokeEmitter = false;		// Should emit smoke?
+
+
+		// Initialization
+		void Start()
 		{
-			actionButton = true;
+			_rigidbody = GetComponent<Rigidbody>();
+			_anim = GetComponent<Animator>();
+			_smokeEmitter = GetComponent<SmokeEmitter>();
 		}
 
-		// Collision fix: isGrounded detection
-		if(ignoreGrounded > 0)
-			ignoreGrounded--;
-	}
-	
-	// Physics
-	void FixedUpdate()
-	{
-		float rotation = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * turnSpeed;		// Turn value
-		float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical");						// Walk speed value
-		smokeEmitter = speed > 0f ? true : false;													// Walking player should emit smoke
-
-		// Animation
-		_anim.SetFloat("Speed", Mathf.Abs(speed));
-
-		// Generate walking-speed
-		speed *= walkSpeed;
-
-		// Rotation
-		transform.Rotate(Vector3.up * rotation);
-
-		// Position, Gravity
-		if(!isGrounded)
+		void Update()
 		{
-			_rigidbody.velocity -= transform.up;
-		}
-		else
-		{
-			_rigidbody.velocity = transform.forward * speed;
-
-			// Emit smoke?
-			if(smokeEmitter)
-				_smokeEmitter.SetActive(true);
-			else
-				_smokeEmitter.SetActive(false);
-		}
-
-		// Action-Button
-		if(actionButton)
-		{
-			bool jump = true;
-
-			actionButton = false;
-
-			// Vehicle in range?
-			Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRadius);
-
-			foreach(Collider nearObject in hitColliders)
+			// Action-Button
+			if(Input.GetKeyDown(KeyCode.Space))
 			{
-				if(nearObject.tag == "VehicleDoor")
+				actionButton = true;
+			}
+
+			// Collision fix: isGrounded detection
+			if(ignoreGrounded > 0)
+				ignoreGrounded--;
+		}
+		
+		// Physics
+		void FixedUpdate()
+		{
+			float rotation = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * turnSpeed;		// Turn value
+			float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical");						// Walk speed value
+			smokeEmitter = speed > 0f ? true : false;													// Walking player should emit smoke
+
+			// Animation
+			_anim.SetFloat("Speed", Mathf.Abs(speed));
+
+			// Generate walking-speed
+			speed *= walkSpeed;
+
+			// Rotation
+			transform.Rotate(Vector3.up * rotation);
+
+			// Position, Gravity
+			if(!isGrounded)
+			{
+				_rigidbody.velocity -= transform.up;
+			}
+			else
+			{
+				_rigidbody.velocity = transform.forward * speed;
+
+				// Emit smoke?
+				if(smokeEmitter)
+					_smokeEmitter.SetActive(true);
+				else
+					_smokeEmitter.SetActive(false);
+			}
+
+			// Action-Button
+			if(actionButton)
+			{
+				bool jump = true;
+
+				actionButton = false;
+
+				// Vehicle in range?
+				Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRadius);
+
+				foreach(Collider nearObject in hitColliders)
 				{
-					// Drive that car
-					jump = false;
+					if(nearObject.tag == "VehicleDoor")
+					{
+						// Drive that car
+						jump = false;
+						isGrounded = false;
+						nearObject.transform.parent.GetComponent<Vehicle>().StartVehicle(playerID);
+					}
+				}
+
+				// Jump?
+				if(isGrounded && jump)
+				{
+					_rigidbody.velocity = new Vector3(_rigidbody.velocity.x, jumpForce, _rigidbody.velocity.z);
 					isGrounded = false;
-					nearObject.transform.parent.GetComponent<CarPrototype>().StartCar(playerID);
+					ignoreGrounded = 5;
 				}
 			}
+		}
 
-			// Jump?
-			if(isGrounded && jump)
+		// Collision handling
+		void OnCollisionStay(Collision collisionInfo)
+		{
+			bool collisionFeet = false;
+
+			foreach(ContactPoint contact in collisionInfo.contacts)
 			{
-				_rigidbody.velocity = new Vector3(_rigidbody.velocity.x, jumpForce, _rigidbody.velocity.z);
-				isGrounded = false;
-				ignoreGrounded = 5;
+				if(contact.normal.y > 0f)
+					collisionFeet = true;
+			}
+
+			if(collisionFeet && !isGrounded)
+			{
+				// Ignore grounded? Used for jumping...
+				if(ignoreGrounded == 0)
+				{
+					isGrounded = true;
+				}
 			}
 		}
-	}
 
-	// Collision handling
-	void OnCollisionStay(Collision collisionInfo)
-	{
-		bool collisionFeet = false;
-
-		foreach(ContactPoint contact in collisionInfo.contacts)
+		void OnCollisionExit(Collision collisionInfo)
 		{
-			if(contact.normal.y > 0f)
-				collisionFeet = true;
+			isGrounded = false;
+			_smokeEmitter.SetActive(false);
 		}
 
-		if(collisionFeet && !isGrounded)
+
+		// Public methods
+
+		// Virtually invert action-button
+		public void ActionButton()
 		{
-			// Ignore grounded? Used for jumping...
-			if(ignoreGrounded == 0)
+			actionButton ^= true;
+		}
+
+
+		// Properties
+
+		public ushort PlayerID
+		{
+			get { return this.playerID;}
+		}
+		
+		public bool IsGrounded
+		{
+			get
 			{
-				isGrounded = true;
+				return this.isGrounded;
 			}
-		}
-	}
-
-	void OnCollisionExit(Collision collisionInfo)
-	{
-		isGrounded = false;
-		_smokeEmitter.SetActive(false);
-	}
-
-
-	// Public methods
-
-	// Virtually invert action-button
-	public void ActionButton()
-	{
-		actionButton ^= true;
-	}
-
-
-	// Properties
-
-	public ushort PlayerID
-	{
-		get { return this.playerID;}
-	}
-	
-	public bool IsGrounded
-	{
-		get
-		{
-			return this.isGrounded;
 		}
 	}
 }
