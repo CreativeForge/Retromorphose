@@ -5,12 +5,42 @@ namespace OilSpill
 {
 	public sealed class Car : Vehicle
 	{
+		[SerializeField] private GameObject explosion;
+		[SerializeField] private float explosionRadius = 10f;
+		[SerializeField] private float explosionForce = 10f;
+
+		// On total loss
+		protected override void OnTotalLoss(object sender, VehicleEventArgs args)
+		{
+			base.OnTotalLoss(sender, args);
+
+			Explode();
+		}
+
+
 		/// <summary>
 		/// Vehicle explosion.
 		/// </summary>
 		public override void Explode()
 		{
-			// Boom
+			Instantiate(explosion, transform.position, transform.rotation);
+			StopVehicle();
+
+			// Apply explosion force to nearby rigidbodies
+			Collider[] nearObjects = Physics.OverlapSphere(transform.position, explosionRadius);
+
+			foreach(Collider nearObject in nearObjects)
+			{
+				Rigidbody nearRigidbody = nearObject.GetComponent<Rigidbody>();
+
+				if(nearRigidbody != null)
+				{
+					nearRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius, 2f);
+				}
+			}
+
+			// Destroy GameObject
+			Destroy(gameObject);
 		}
 
 
@@ -25,14 +55,12 @@ namespace OilSpill
 
 				default:
 					
-					float collisionAngle = Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity.normalized);
-					float damageMulti = Mathf.Pow(Mathf.Abs(Mathf.Cos(collisionAngle)), 2f) * collisionInfo.relativeVelocity.magnitude;
-
-					//damageMulti *= _rigidbody.velocity.normalized.magnitude;
+					float impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
+					float damageMulti = Mathf.Abs(impact * _rigidbody.mass * 0.05f) * collisionMultiplier;
 
 					if(damageMulti > 5f)
 					{
-						MakeDamage(damageMulti * 0.5f);
+						MakeDamage(damageMulti);
 					}
 
 					break;

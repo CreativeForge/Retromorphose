@@ -16,14 +16,18 @@ public class CameraFollow : MonoBehaviour
 	{
 		velocity = Vector3.zero;
 
-		ChangeTarget(target);
+		// Camera move and look at
+		distanceToTarget = Mathf.Tan(angle) * height;
+
+		Vector3 movePosition = target.position + new Vector3(distanceToTarget, height);
+		transform.position = movePosition;
+		transform.LookAt(target);
 	}
 	
 	// Physics
 	void FixedUpdate()
 	{
 		Vector3 movePosition = target.position + new Vector3(distanceToTarget, height);
-		float distanceBetween = Vector3.Distance(transform.position, movePosition);
 
 		transform.position = Vector3.SmoothDamp(transform.position, movePosition, ref velocity, smooth);
 	}
@@ -35,16 +39,19 @@ public class CameraFollow : MonoBehaviour
 	{
 		target = newTarget;
 
+		/*
 		if(newTarget.tag == "Player")
 			height = 10f;
 		else
 			height = 20f;
+		
 
-		// Camero move and look at
+		// Camera move and look at
 		distanceToTarget = Mathf.Tan(angle) * height;
 
 		Vector3 movePosition = target.position + new Vector3(distanceToTarget, height);
 		transform.position = movePosition;
 		transform.LookAt(target);
+		*/
 	}
 }

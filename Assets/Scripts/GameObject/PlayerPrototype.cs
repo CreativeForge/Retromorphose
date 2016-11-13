@@ -21,6 +21,7 @@ namespace OilSpill
 		private uint ignoreGrounded = 0;		// How many frames should ground collision be ignored? (isGrounded fix)
 		private bool actionButton = false;		// Action-button
 		private bool smokeEmitter = false;		// Should emit smoke?
+		private bool canMove = false;			// Is player freezed?
 
 
 		// Initialization
@@ -47,6 +48,10 @@ namespace OilSpill
 		// Physics
 		void FixedUpdate()
 		{
+			// Player movement
+			if(!canMove)
+				return;
+			
 			float rotation = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * turnSpeed;		// Turn value
 			float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical");						// Walk speed value
 			smokeEmitter = speed > 0f ? true : false;													// Walking player should emit smoke
@@ -153,10 +158,13 @@ namespace OilSpill
 		
 		public bool IsGrounded
 		{
-			get
-			{
-				return this.isGrounded;
-			}
+			get { return this.isGrounded; }
+		}
+
+		public bool CanMove
+		{
+			get { return this.canMove; }
+			set { this.canMove = value; }
 		}
 	}
 }

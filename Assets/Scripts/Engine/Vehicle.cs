@@ -18,6 +18,7 @@ namespace OilSpill
 
 		[SerializeField] protected float fuel = 100f;
 		[SerializeField] protected float damage = 0f;
+		[SerializeField] protected float collisionMultiplier = 1f;
 
 		// On initialization
 		protected Rigidbody _rigidbody;
@@ -140,10 +141,8 @@ namespace OilSpill
 			// Make damage
 			if(collisionInfo.gameObject.tag != "Player")
 			{
-				float collisionAngle = Vector3.Angle(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity.normalized);
-				float damageMulti = Mathf.Pow(Mathf.Abs(Mathf.Cos(collisionAngle)), 2f) * collisionInfo.relativeVelocity.magnitude;
-
-				//damageMulti *= _rigidbody.velocity.normalized.magnitude;
+				float impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
+				float damageMulti = Mathf.Abs(impact * _rigidbody.mass * 0.05f) * collisionMultiplier;
 
 				if(damageMulti > 5f)
 				{

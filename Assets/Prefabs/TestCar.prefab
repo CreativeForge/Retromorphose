@@ -144,6 +144,7 @@ GameObject:
   - 54: {fileID: 5470516}
   - 65: {fileID: 65000013427722032}
   - 114: {fileID: 114000011133253344}
+  - 114: {fileID: 114000013894817954}
   m_Layer: 0
   m_Name: TestCar
   m_TagString: Vehicle
@@ -380,7 +381,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b434454899f9e47a2923d2abc2d9db36, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -409,7 +410,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b434454899f9e47a2923d2abc2d9db36, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -438,7 +439,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b434454899f9e47a2923d2abc2d9db36, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -467,7 +468,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b434454899f9e47a2923d2abc2d9db36, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -840,6 +841,23 @@ MonoBehaviour:
   - {fileID: 496316}
   fuel: 100
   damage: 0
+  collisionMultiplier: 2
+  explosion: {fileID: 1000013961593098, guid: b51ee1d2851b842a1a80a3c19d1ccd93, type: 2}
+  explosionRadius: 20
+  explosionForce: 50
+--- !u!114 &114000013894817954
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 164426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90992f768e9b146b2a9d7e9ddc7b5355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: {x: 80, y: 5}
+  offset: 80
 --- !u!198 &198000014257555872
 ParticleSystem:
   m_ObjectHideFlags: 1
