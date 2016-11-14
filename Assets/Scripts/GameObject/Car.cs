@@ -17,6 +17,29 @@ namespace OilSpill
 			Explode();
 		}
 
+		// Start vehicle - add damage-bar
+		public override void StartVehicle(ushort playerID)
+		{
+			DamageBar bar = GetComponent<DamageBar>();
+
+			base.StartVehicle(playerID);
+
+			if(bar != null)
+				bar.enabled = true;
+		}
+
+		// Stop vehicle - remove damage-bar
+		public override void StopVehicle()
+		{
+			DamageBar bar = GetComponent<DamageBar>();
+
+			base.StopVehicle();
+
+			if(bar != null)
+				bar.enabled = false;
+		}
+
+
 
 		/// <summary>
 		/// Vehicle explosion.
@@ -24,7 +47,9 @@ namespace OilSpill
 		public override void Explode()
 		{
 			Instantiate(explosion, transform.position, transform.rotation);
-			StopVehicle();
+
+			if(isUsed)
+				StopVehicle();
 
 			// Apply explosion force to nearby rigidbodies
 			Collider[] nearObjects = Physics.OverlapSphere(transform.position, explosionRadius);

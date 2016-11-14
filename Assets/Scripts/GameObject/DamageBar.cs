@@ -50,6 +50,7 @@ namespace OilSpill
 			// Draw health bar
 			GUI.BeginGroup(new Rect(posX, posY, size.x, size.y), backgroundStyle);
 
+			// Progress
 			float damageProg = size.x * (Mathf.Clamp(damageable.Damage, 0f, 100f) / 100f);
 
 			GUI.BeginGroup(new Rect(size.x - damageProg, 0, damageProg, size.y), damageStyle);
