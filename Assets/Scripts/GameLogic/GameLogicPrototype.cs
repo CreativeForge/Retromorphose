@@ -41,9 +41,11 @@ namespace OilSpill
 		{
 			// Debug car info output
 			_cars = GameObject.FindGameObjectsWithTag("Vehicle");
-			infoText = infoTextObj.GetComponent<Text>();
-
 			_playerObj = GameObject.FindGameObjectWithTag("Player");
+
+			//Get debug text element
+			if(infoTextObj != null)
+				infoText = infoTextObj.GetComponent<Text>();
 
 			// Race start countdown
 			StartCoroutine(StartCountdown());
@@ -52,10 +54,25 @@ namespace OilSpill
 		// GUI
 		void Update()
 		{
-			/*
-			infoText.text = "Car 1 - Fuel: " + _cars[0].GetComponent<Car>().Fuel.ToString("F0") +
-				"\nCar 2 - Fuel: " + _cars[1].GetComponent<Car>().Fuel.ToString("F0");
-			*/
+			if(infoTextObj != null)
+			{
+				bool driving = false;
+
+				_cars = GameObject.FindGameObjectsWithTag("Vehicle");
+
+				foreach(GameObject car in _cars)
+				{
+					if(car.GetComponent<Car>().IsUsed)
+					{
+						infoText.text = "Fuel: " + car.GetComponent<Car>().Fuel.ToString("F0") + "%";
+						driving = true;
+						break;
+					}
+				}
+
+				if(!driving)
+					infoText.text = "Not driving...";
+			}
 		}
 
 		// Race countdown

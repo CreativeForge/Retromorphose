@@ -353,6 +353,15 @@ namespace OilSpill
 		// Properties
 
 		/// <summary>
+		/// Gets a value indicating whether this vehicle is used.
+		/// </summary>
+		/// <value><c>true</c> if this vehicle is used; otherwise, <c>false</c>.</value>
+		public bool IsUsed
+		{
+			get { return this.isUsed; }
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is grounded.
 		/// </summary>
 		/// <value><c>true</c> if this instance is grounded; otherwise, <c>false</c>.</value>
