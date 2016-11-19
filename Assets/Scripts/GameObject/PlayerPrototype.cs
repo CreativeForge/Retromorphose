@@ -22,6 +22,7 @@ namespace OilSpill
 		private bool actionButton = false;		// Action-button
 		private bool smokeEmitter = false;		// Should emit smoke?
 		private bool canMove = false;			// Is player freezed?
+		private Transform vehicle = null;		// Vehicle in range?
 
 
 		// Initialization
@@ -34,10 +35,75 @@ namespace OilSpill
 
 		void Update()
 		{
-			// Action-Button
-			if(Input.GetKeyDown(KeyCode.Space))
+			bool vehicleInRange = false;
+			ushort vehicleCount = 0;
+
+			// Vehicle in range?
+			Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRadius);
+
+			foreach(Collider nearObject in hitColliders)
 			{
-				actionButton = true;
+				if(nearObject.tag == "VehicleDoor")
+				{
+					vehicleCount++;
+
+					// Can drive that car
+					vehicleInRange = true;
+
+					// Old car?
+					if(vehicle != null)
+					{
+						// Display driving hint if there is one
+						if(vehicle.GetComponent<HintPrototype>() != null)
+						{
+							// Hide old vehicle (out of range) driving-hint if new car
+							if(!nearObject.transform.parent.Equals(vehicle))
+							{
+								vehicle.GetComponent<HintPrototype>().enabled = false;
+							}
+							else
+							{
+								// Same car
+								break;
+							}
+						}
+					}
+
+					// Assign new vehicle
+					vehicle = nearObject.transform.parent;
+					break;
+				}
+			}
+
+			// No vehicle in range?
+			if((vehicleCount == 0) && (vehicle != null))
+			{
+				// Hide old vehicle hint if there is one
+				if(vehicle.GetComponent<HintPrototype>() != null)
+					vehicle.GetComponent<HintPrototype>().enabled = false;
+			}
+
+			// Action-Button
+			if(actionButton || Input.GetKeyDown(KeyCode.Space))
+			{
+				actionButton = false;
+
+				// Drive?
+				if(vehicleInRange)
+				{
+					if(vehicle != null)
+					{
+						isGrounded = false;
+						vehicle.GetComponent<Vehicle>().StartVehicle(playerID);
+					}
+				}
+				// Jump?
+				else if(isGrounded)
+				{
+					_rigidbody.velocity = new Vector3(_rigidbody.velocity.x, jumpForce, _rigidbody.velocity.z);
+					isGrounded = false;
+					ignoreGrounded = 5;
+				}
 			}
 
 			// Collision fix: isGrounded detection
@@ -79,36 +145,6 @@ namespace OilSpill
 					_smokeEmitter.SetActive(true);
 				else
 					_smokeEmitter.SetActive(false);
-			}
-
-			// Action-Button
-			if(actionButton)
-			{
-				bool jump = true;
-
-				actionButton = false;
-
-				// Vehicle in range?
-				Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRadius);
-
-				foreach(Collider nearObject in hitColliders)
-				{
-					if(nearObject.tag == "VehicleDoor")
-					{
-						// Drive that car
-						jump = false;
-						isGrounded = false;
-						nearObject.transform.parent.GetComponent<Vehicle>().StartVehicle(playerID);
-					}
-				}
-
-				// Jump?
-				if(isGrounded && jump)
-				{
-					_rigidbody.velocity = new Vector3(_rigidbody.velocity.x, jumpForce, _rigidbody.velocity.z);
-					isGrounded = false;
-					ignoreGrounded = 5;
-				}
 			}
 		}
 

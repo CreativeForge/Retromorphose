@@ -30,6 +30,7 @@ namespace OilSpill
 		protected GameObject playerObject;
 		protected ushort playerID = 0;
 		protected float smokeRate = 0f;
+		protected float fuelConsumption = 0;
 
 		protected bool noFuel = false;
 		protected bool totalLoss = false;
@@ -102,7 +103,8 @@ namespace OilSpill
 							iterateWheels.motorTorque = torque;
 
 						// Fuel consumption
-						fuel -= 0.001f * Mathf.Abs(torque);
+						fuelConsumption = 0.001f * Mathf.Abs(torque);
+						fuel -= fuelConsumption;
 
 						// Smoke amount
 						var em = _smokeEmitter.emission;
@@ -120,6 +122,7 @@ namespace OilSpill
 					if(!noFuel)
 					{
 						noFuel = true;
+						fuelConsumption = 0f;
 
 						// Fire 'NoFuel'-event
 						if(NoFuel != null)
@@ -388,6 +391,15 @@ namespace OilSpill
 		{
 			get { return this.fuel; }
 			set { this.fuel = value; }
+		}
+
+		/// <summary>
+		/// Gets the fuel consumption per fixed frame.
+		/// </summary>
+		/// <value>The fuel consumption amount.</value>
+		public float Consumption
+		{
+			get { return this.fuelConsumption; }
 		}
 
 		/// <summary>

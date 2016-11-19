@@ -8,12 +8,18 @@ namespace OilSpill
 	{
 		public static GameLogicPrototype Main { get; private set; }
 
+		[SerializeField] private float dollarsPerFullTank;
+
+		[SerializeField] private GameObject moneyTextObj;
 		[SerializeField] private GameObject infoTextObj;
 
 		private GameObject[] _cars;
 		private GameObject _playerObj;
 
 		private Text infoText;
+		private Text moneyText;
+
+		private ulong money = 0;
 
 		// Before load
 		void Awake()
@@ -47,6 +53,9 @@ namespace OilSpill
 			if(infoTextObj != null)
 				infoText = infoTextObj.GetComponent<Text>();
 
+			// Money text element
+			moneyText = moneyTextObj.GetComponent<Text>();
+
 			// Race start countdown
 			StartCoroutine(StartCountdown());
 		}
@@ -54,26 +63,29 @@ namespace OilSpill
 		// GUI
 		void Update()
 		{
-			if(infoTextObj != null)
-			{
-				bool driving = false;
+			bool driving = !_playerObj.activeInHierarchy;
 
+			if(driving)
+			{
 				_cars = GameObject.FindGameObjectsWithTag("Vehicle");
 
 				foreach(GameObject car in _cars)
 				{
 					if(car.GetComponent<Car>().IsUsed)
 					{
-						infoText.text = "Fuel: " + car.GetComponent<Car>().Fuel.ToString("F0") + "%";
-						driving = true;
+						money += (uint)(car.GetComponent<Car>().Consumption > 0f ? 1 : 0) * 100;
 						break;
 					}
 				}
-
-				if(!driving)
-					infoText.text = "Not driving...";
 			}
 		}
+
+		// GUI Update
+		void OnGUI()
+		{
+			moneyText.text = money.ToString("N0") + "$";
+		}
+
 
 		// Race countdown
 		IEnumerator StartCountdown()
