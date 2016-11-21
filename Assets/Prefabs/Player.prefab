@@ -1399,6 +1399,7 @@ MonoBehaviour:
   - {fileID: 1000011565526346, guid: cc294a419587802468e7490996a4b7ed, type: 2}
   - {fileID: 1000011084647298, guid: d0d2725c31fb1af43b1a7e0903b09a41, type: 2}
   smokeAmount: 40
+  smokeMultiplier: 1
   startOnAwake: 0
 --- !u!114 &114000014144872340
 MonoBehaviour:
@@ -1413,7 +1414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerID: 1
   walkSpeed: 6
-  turnSpeed: 4
+  turnSpeed: 10
   jumpForce: 15
   interactionRadius: 0.8
 --- !u!136 &136000012566467360

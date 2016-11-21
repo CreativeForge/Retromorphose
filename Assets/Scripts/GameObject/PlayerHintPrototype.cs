@@ -27,6 +27,8 @@ namespace OilSpill
 			// How long should hint be displayed?
 
 			float input = Mathf.Abs(Input.GetAxis("P" + _playerID.ToString() + " Vertical"));
+			input += Mathf.Abs(Input.GetAxis("P" + _playerID.ToString() + " Horizontal"));
+			input = Mathf.Clamp01(input);
 
 			// Count time - disable component when done
 			if(time > hintTime)

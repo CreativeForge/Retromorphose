@@ -9,6 +9,7 @@ namespace OilSpill
 		public static GameLogicPrototype Main { get; private set; }
 
 		public bool RaceStarted { get; private set; }
+		public bool RaceFinished { get; private set; }
 
 		[SerializeField] private float time;
 
@@ -25,6 +26,7 @@ namespace OilSpill
 		private Coroutine moneyCount;
 
 		private ulong money = 0;
+		private uint moneyTenThousand = 0;			// Counts the ten-thousands money - for money feedback
 		private bool timerFeedback = false;
 
 		// Before load
@@ -46,6 +48,9 @@ namespace OilSpill
 				print("[OilSpill] " + GameLogicPrototype.Main.name + "is now assigned as GameLogic.");
 			}
 
+			// Default values properties
+			RaceStarted = false;
+			RaceFinished = false;
 		}
 
 		// Initialization
@@ -76,7 +81,12 @@ namespace OilSpill
 		{
 			// Count time
 			if(RaceStarted)
-				time -= Time.deltaTime;
+			{
+				if(time > 0)
+					time -= Time.deltaTime;
+				else
+					Time.timeScale = 0f;
+			}
 		}
 
 		// GUI Update
@@ -93,7 +103,51 @@ namespace OilSpill
 				timeText.color = new Color(0.8f, 0f, 0f);
 				StartCoroutine(TimerFeedback());
 			}
+
+			// Money feedback? Every ten-thousand
+			if((money / 10000) > moneyTenThousand)
+			{
+				moneyTenThousand = (uint)(money / 10000);
+				StartCoroutine(moneyTextObj.GetComponent<UIEffects>().DuplicateFade());
+			}
 		}
+
+
+		// Finish line
+		public void FinishRace()
+		{
+			if(RaceFinished)
+				return;
+			
+			bool driving = !_playerObj.activeInHierarchy;
+
+			RaceFinished = true;
+			print("[OilSpill] Reached the finish line!");
+
+			// If car is driving
+			if(driving)
+			{
+				_cars = GameObject.FindGameObjectsWithTag("Vehicle");
+
+				// Iterate through cars
+				foreach(GameObject car in _cars)
+				{
+					// Is car used?
+					if(car.GetComponent<Car>().IsUsed)
+					{
+						// Stop car after 1 second
+						StartCoroutine(ExitCarFinish(1f, car));
+						break;
+					}
+				}
+			}
+			else
+			{
+				_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
+			}
+
+		}
+
 
 
 		// Money per fuel consumption
@@ -103,14 +157,18 @@ namespace OilSpill
 			{
 				bool driving = !_playerObj.activeInHierarchy;
 
+				// If car is driving
 				if(driving)
 				{
 					_cars = GameObject.FindGameObjectsWithTag("Vehicle");
 
+					// Iterate through cars
 					foreach(GameObject car in _cars)
 					{
+						// Is car used?
 						if(car.GetComponent<Car>().IsUsed)
 						{
+							// Add money for fuel consumption
 							money += (uint)(car.GetComponent<Car>().Consumption * 10000f);
 							break;
 						}
@@ -126,7 +184,7 @@ namespace OilSpill
 		{
 			while(time <= 10f)
 			{
-				StartCoroutine(timeTextObj.GetComponent<TextEffects>().ScaleFeedback());
+				StartCoroutine(timeTextObj.GetComponent<UIEffects>().ScaleFeedback());
 				yield return new WaitForSeconds(1f);
 			}
 
@@ -151,6 +209,14 @@ namespace OilSpill
 			_playerObj.GetComponent<PlayerPrototype>().CanMove = true;
 			RaceStarted = true;
 
+		}
+
+		// Exit the car after delay and finish race
+		IEnumerator ExitCarFinish(float delay, GameObject car)
+		{
+			yield return new WaitForSeconds(delay);
+			car.GetComponent<Car>().StopVehicle();
+			_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
 		}
 	}
 }

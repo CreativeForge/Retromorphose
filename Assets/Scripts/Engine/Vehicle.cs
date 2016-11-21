@@ -249,6 +249,10 @@ namespace OilSpill
 		/// <param name="playerID">ID of the player that starts the vehicle.</param>
 		public virtual void StartVehicle(ushort playerID)
 		{
+			// Don't start car when timeScale is zero
+			if(Time.timeScale == 0f)
+				return;
+			
 			GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
 			// Search player who wants to drive
@@ -278,6 +282,10 @@ namespace OilSpill
 		/// </summary>
 		public virtual void StopVehicle()
 		{
+			// Don't start car when timeScale is zero
+			if(Time.timeScale == 0f)
+				return;
+			
 			Vector3 hitBoxCenter = transform.FindChild("LeftDoor").GetComponent<Collider>().bounds.center;
 			Vector3 hitBoxExtents = transform.FindChild("LeftDoor").GetComponent<Collider>().bounds.extents;
 

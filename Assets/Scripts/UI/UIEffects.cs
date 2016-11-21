@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TextEffects : MonoBehaviour
+public class UIEffects : MonoBehaviour
 {
 	[SerializeField] protected float scaleTime = 0.3f;
 	[SerializeField] protected float scaleSize = 1.3f;
+	[SerializeField] protected float duplicateTime = 1f;
+	[SerializeField] protected float duplicateSize = 2f;
 
 	// Every frame
 	void Update()
 	{
 		if(Input.GetKeyDown(KeyCode.A))
-			StartCoroutine(ScaleFeedback());
+		{
+			StartCoroutine(DuplicateFade());
+		}
 	}
 
 	// Scale up and back down
@@ -43,5 +47,29 @@ public class TextEffects : MonoBehaviour
 
 			transform.localScale = Vector3.one;
 		}
+	}
+
+	// Duplicate and fade effect
+	public IEnumerator DuplicateFade()
+	{
+		GameObject duplicate = Instantiate(gameObject, transform.parent) as GameObject;
+		Vector3 newScale = Vector3.one * duplicateSize;
+		float newAlpha = 1f;
+		float elapsedTime = 0;
+
+		// Scale up and fade
+		while(elapsedTime < duplicateTime)
+		{
+			duplicate.transform.localScale = Vector3.Lerp(Vector3.one, newScale, (elapsedTime / duplicateTime));
+			newAlpha = Mathf.Lerp(1f, 0f, (elapsedTime / duplicateTime));
+
+			duplicate.GetComponent<CanvasRenderer>().SetAlpha(newAlpha);
+			elapsedTime += Time.deltaTime;
+
+			yield return new WaitForEndOfFrame();
+		}
+
+		// Destroy duplicate
+		Destroy(duplicate);
 	}
 }

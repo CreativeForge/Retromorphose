@@ -72,12 +72,13 @@ namespace OilSpill
 		// Collision
 		protected override void OnCollisionEnter(Collision collisionInfo)
 		{
-			// Make damage
 			switch(collisionInfo.gameObject.tag)
 			{
 				case "Player":
+				case "Invisible":
 					break;
-
+				
+				// Make damage
 				default:
 					
 					float impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
@@ -92,5 +93,24 @@ namespace OilSpill
 			}
 		}
 
+
+		// Triggers
+		protected void OnTriggerEnter(Collider other)
+		{
+			switch(other.tag)
+			{
+				// Cross finish line
+				case "Finish":
+
+					if(isUsed)
+						GameLogicPrototype.Main.FinishRace();
+
+					break;
+
+			
+				default:
+					break;
+			}
+		}
 	}
 }

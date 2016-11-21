@@ -54,7 +54,8 @@ namespace OilSpill
 					if(vehicle != null)
 					{
 						// Display driving hint if there is one
-						if(vehicle.GetComponent<HintPrototype>() != null)
+						if((vehicle.GetComponent<HintPrototype>() != null) &&
+							!GameLogicPrototype.Main.RaceFinished)
 						{
 							// Hide old vehicle (out of range) driving-hint if new car
 							if(!nearObject.transform.parent.Equals(vehicle))
@@ -74,8 +75,11 @@ namespace OilSpill
 					vehicle = nearObject.transform.parent;
 
 					// Display driving hint if there is one
-					if(vehicle.GetComponent<HintPrototype>() != null)
+					if((vehicle.GetComponent<HintPrototype>() != null) &&
+					   !GameLogicPrototype.Main.RaceFinished)
+					{
 						vehicle.GetComponent<HintPrototype>().enabled = true;
+					}
 					
 					break;
 				}
@@ -129,19 +133,18 @@ namespace OilSpill
 			// Player movement
 			if(!canMove)
 				return;
-			
-			float rotation = Input.GetAxis("P" + playerID.ToString() + " Horizontal") * turnSpeed;		// Turn value
-			float speed = Input.GetAxis("P" + playerID.ToString() + " Vertical");						// Walk speed value
-			smokeEmitter = speed > 0f ? true : false;													// Walking player should emit smoke
+
+			Vector3 direction = new Vector3(-Input.GetAxis("P" + playerID.ToString() + " Vertical"), 0f, Input.GetAxis("P" + playerID.ToString() + " Horizontal"));
+
+			// Walking player should emit smoke
+			smokeEmitter = direction.magnitude > 0f ? true : false;
 
 			// Animation
-			_anim.SetFloat("Speed", Mathf.Abs(speed));
-
-			// Generate walking-speed
-			speed *= walkSpeed;
+			_anim.SetFloat("Speed", direction.normalized.magnitude);
 
 			// Rotation
-			transform.Rotate(Vector3.up * rotation);
+			Quaternion targetRotation = Quaternion.LookRotation(direction.magnitude != 0f ? direction.normalized : transform.forward);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * turnSpeed);
 
 			// Position, Gravity
 			if(!isGrounded)
@@ -150,7 +153,7 @@ namespace OilSpill
 			}
 			else
 			{
-				_rigidbody.velocity = transform.forward * speed;
+				_rigidbody.velocity = transform.forward * walkSpeed * direction.magnitude;
 
 				// Emit smoke?
 				if(smokeEmitter)
@@ -187,6 +190,21 @@ namespace OilSpill
 			_smokeEmitter.SetActive(false);
 		}
 
+		// Triggers
+		void OnTriggerEnter(Collider other)
+		{
+			switch(other.tag)
+			{
+				case "Finish":
+					GameLogicPrototype.Main.FinishRace();
+					break;
+
+				default:
+					break;
+			}
+		}
+
+
 
 		// Public methods
 
@@ -212,7 +230,18 @@ namespace OilSpill
 		public bool CanMove
 		{
 			get { return this.canMove; }
-			set { this.canMove = value; }
+			set
+			{
+				this.canMove = value;
+
+				// Animation and smoke
+				if(!value)
+				{
+					_anim.SetFloat("Speed", 0f);
+					smokeEmitter = false;
+					_smokeEmitter.SetActive(false);
+				}
+			}
 		}
 	}
 }
