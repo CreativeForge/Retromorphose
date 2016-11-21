@@ -210,7 +210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17a8bd721aede42beb9d0f9e17126dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infoTextObj: {fileID: 1044486541}
+  dollarsPerFullTank: 0
+  moneyTextObj: {fileID: 1044486541}
+  infoTextObj: {fileID: 0}
 --- !u!114 &191342504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,7 +538,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1669716965}
-  height: 20
+  distanceToTarget: 30
+  distanceToPlayer: 30
   angle: 10
   smooth: 0.2
 --- !u!1001 &861227202

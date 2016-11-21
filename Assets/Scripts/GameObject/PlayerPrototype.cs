@@ -64,6 +64,7 @@ namespace OilSpill
 							else
 							{
 								// Same car
+								vehicle.GetComponent<HintPrototype>().enabled = true;
 								break;
 							}
 						}
@@ -71,6 +72,11 @@ namespace OilSpill
 
 					// Assign new vehicle
 					vehicle = nearObject.transform.parent;
+
+					// Display driving hint if there is one
+					if(vehicle.GetComponent<HintPrototype>() != null)
+						vehicle.GetComponent<HintPrototype>().enabled = true;
+					
 					break;
 				}
 			}
@@ -94,6 +100,12 @@ namespace OilSpill
 					if(vehicle != null)
 					{
 						isGrounded = false;
+
+						// Hide vehicle hint if there is one
+						if(vehicle.GetComponent<HintPrototype>() != null)
+							vehicle.GetComponent<HintPrototype>().enabled = false;
+
+						// Start vehicle
 						vehicle.GetComponent<Vehicle>().StartVehicle(playerID);
 					}
 				}

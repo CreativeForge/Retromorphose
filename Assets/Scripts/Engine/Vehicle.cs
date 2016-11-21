@@ -17,6 +17,7 @@ namespace OilSpill
 		[SerializeField] protected Transform[] wheels = new Transform[4];
 
 		[SerializeField] protected float fuel = 100f;
+		[SerializeField] protected float consumptionMultiplier = 1f;
 		[SerializeField] protected float damage = 0f;
 		[SerializeField] protected float collisionMultiplier = 1f;
 
@@ -103,7 +104,7 @@ namespace OilSpill
 							iterateWheels.motorTorque = torque;
 
 						// Fuel consumption
-						fuelConsumption = 0.001f * Mathf.Abs(torque);
+						fuelConsumption = 0.001f * Mathf.Abs(torque) * consumptionMultiplier;
 						fuel -= fuelConsumption;
 
 						// Smoke amount

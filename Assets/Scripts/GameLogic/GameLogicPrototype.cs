@@ -8,8 +8,11 @@ namespace OilSpill
 	{
 		public static GameLogicPrototype Main { get; private set; }
 
-		[SerializeField] private float dollarsPerFullTank;
+		public bool RaceStarted { get; private set; }
 
+		[SerializeField] private float time;
+
+		[SerializeField] private GameObject timeTextObj;
 		[SerializeField] private GameObject moneyTextObj;
 		[SerializeField] private GameObject infoTextObj;
 
@@ -17,9 +20,12 @@ namespace OilSpill
 		private GameObject _playerObj;
 
 		private Text infoText;
+		private Text timeText;
 		private Text moneyText;
+		private Coroutine moneyCount;
 
 		private ulong money = 0;
+		private bool timerFeedback = false;
 
 		// Before load
 		void Awake()
@@ -53,39 +59,80 @@ namespace OilSpill
 			if(infoTextObj != null)
 				infoText = infoTextObj.GetComponent<Text>();
 
-			// Money text element
+			// GUI elements
+			timeText = timeTextObj.GetComponent<Text>();
 			moneyText = moneyTextObj.GetComponent<Text>();
 
 			// Race start countdown
+			RaceStarted = false;
 			StartCoroutine(StartCountdown());
+
+			// Start money count coroutine
+			moneyCount = StartCoroutine(FuelToMoney());
 		}
 		
 		// GUI
 		void Update()
 		{
-			bool driving = !_playerObj.activeInHierarchy;
-
-			if(driving)
-			{
-				_cars = GameObject.FindGameObjectsWithTag("Vehicle");
-
-				foreach(GameObject car in _cars)
-				{
-					if(car.GetComponent<Car>().IsUsed)
-					{
-						money += (uint)(car.GetComponent<Car>().Consumption > 0f ? 1 : 0) * 100;
-						break;
-					}
-				}
-			}
+			// Count time
+			if(RaceStarted)
+				time -= Time.deltaTime;
 		}
 
 		// GUI Update
 		void OnGUI()
 		{
 			moneyText.text = money.ToString("N0") + "$";
+			timeText.text = "Timer: " + time.ToString("F1") + "s";
+
+			if((time <= 10) && !timerFeedback)
+			{
+				timerFeedback = true;
+
+				// Color and animation
+				timeText.color = new Color(0.8f, 0f, 0f);
+				StartCoroutine(TimerFeedback());
+			}
 		}
 
+
+		// Money per fuel consumption
+		IEnumerator FuelToMoney()
+		{
+			while(true)
+			{
+				bool driving = !_playerObj.activeInHierarchy;
+
+				if(driving)
+				{
+					_cars = GameObject.FindGameObjectsWithTag("Vehicle");
+
+					foreach(GameObject car in _cars)
+					{
+						if(car.GetComponent<Car>().IsUsed)
+						{
+							money += (uint)(car.GetComponent<Car>().Consumption * 10000f);
+							break;
+						}
+					}
+				}
+
+				yield return new WaitForSeconds(0.2f);
+			}
+		}
+
+		// Not much time left
+		IEnumerator TimerFeedback()
+		{
+			while(time <= 10f)
+			{
+				StartCoroutine(timeTextObj.GetComponent<TextEffects>().ScaleFeedback());
+				yield return new WaitForSeconds(1f);
+			}
+
+			// Reset feedback value
+			timerFeedback = false;
+		}
 
 		// Race countdown
 		IEnumerator StartCountdown()
@@ -102,6 +149,7 @@ namespace OilSpill
 			// Go
 			print("GO!");
 			_playerObj.GetComponent<PlayerPrototype>().CanMove = true;
+			RaceStarted = true;
 
 		}
 	}

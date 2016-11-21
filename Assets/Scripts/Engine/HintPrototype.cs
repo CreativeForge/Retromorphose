@@ -11,8 +11,8 @@ namespace OilSpill
 
 		protected Vector2 imageScale; 
 
-		// Use this for initialization
-		void Start()
+		// Initialization
+		protected virtual void Start()
 		{
 			if(hintImage == null)
 			{
@@ -32,14 +32,9 @@ namespace OilSpill
 				}
 			}
 		}
-		
-		// Update is called once per frame
-		void Update()
-		{	
-		
-		}
 
-		void OnGUI()
+		// GUI Update
+		protected virtual void OnGUI()
 		{
 			Vector3 hintPos = Camera.main.WorldToScreenPoint(transform.position);
 
