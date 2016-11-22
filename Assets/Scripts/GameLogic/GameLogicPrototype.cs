@@ -215,8 +215,12 @@ namespace OilSpill
 		IEnumerator ExitCarFinish(float delay, GameObject car)
 		{
 			yield return new WaitForSeconds(delay);
-			car.GetComponent<Car>().StopVehicle();
-			_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
+
+			if(car != null)
+			{
+				car.GetComponent<Car>().StopVehicle();
+				_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
+			}
 		}
 	}
 }

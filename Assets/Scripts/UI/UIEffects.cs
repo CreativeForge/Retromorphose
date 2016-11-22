@@ -57,6 +57,9 @@ public class UIEffects : MonoBehaviour
 		float newAlpha = 1f;
 		float elapsedTime = 0;
 
+		// Remove this script from duplicate
+		Destroy(duplicate.GetComponent<UIEffects>());
+
 		// Scale up and fade
 		while(elapsedTime < duplicateTime)
 		{
