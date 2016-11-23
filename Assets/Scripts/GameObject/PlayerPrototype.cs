@@ -94,7 +94,7 @@ namespace OilSpill
 			}
 
 			// Action-Button
-			if(actionButton || Input.GetKeyDown(KeyCode.Space))
+			if((actionButton || Input.GetKeyDown(KeyCode.Space)) && !GameLogicPrototype.Main.RaceFinished)
 			{
 				actionButton = false;
 

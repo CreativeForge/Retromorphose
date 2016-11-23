@@ -62,7 +62,7 @@ namespace OilSpill
 		protected virtual void Start()
 		{
 			// Get components
-			_smokeEmitter = GetComponentInChildren<ParticleSystem>();
+			_smokeEmitter = GetComponentsInChildren<ParticleSystem>()[0];
 			_rigidbody = GetComponent<Rigidbody>();
 			_rigidbody.centerOfMass = centerOfMass.localPosition;
 		}

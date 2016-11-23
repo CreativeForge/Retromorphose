@@ -265,7 +265,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013720483014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4, y: 0.92, z: 1.219}
+  m_LocalPosition: {x: -1.4, y: 0.92, z: 0.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -373,7 +373,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010495672366}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.87, y: 1.84, z: 0}
+  m_LocalPosition: {x: 6.901155, y: 0.29703987, z: 11.077931}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -461,7 +461,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011369364084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4, y: 0.92, z: 1.219}
+  m_LocalPosition: {x: 1.4, y: 0.92, z: 0.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -737,6 +737,7 @@ MonoBehaviour:
   - {fileID: 4000013133315914}
   - {fileID: 4000010787616504}
   fuel: 100
+  consumptionMultiplier: 1
   damage: 0
   collisionMultiplier: 2
   explosion: {fileID: 1000013961593098, guid: b51ee1d2851b842a1a80a3c19d1ccd93, type: 2}

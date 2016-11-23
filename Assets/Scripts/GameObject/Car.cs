@@ -9,6 +9,32 @@ namespace OilSpill
 		[SerializeField] private float explosionRadius = 10f;
 		[SerializeField] private float explosionForce = 10f;
 
+		private ParticleSystem _dollarEmitter;
+
+
+		// Start routine
+		protected override void Start()
+		{
+			base.Start();
+			_dollarEmitter = GetComponentsInChildren<ParticleSystem>()[1];
+		}
+
+		// Every frame
+		protected override void Update()
+		{
+			base.Update();
+
+			if(isUsed)
+			{
+				float inputVertical = Mathf.Abs(Input.GetAxis("P" + playerID.ToString() + " Vertical"));
+
+				// Dollar amount
+				var em = _dollarEmitter.emission;
+				var rate = new ParticleSystem.MinMaxCurve(inputVertical * _rigidbody.velocity.magnitude * 0.5f);
+				em.rate = rate;
+			}
+		}
+
 		// On total loss
 		protected override void OnTotalLoss(object sender, VehicleEventArgs args)
 		{

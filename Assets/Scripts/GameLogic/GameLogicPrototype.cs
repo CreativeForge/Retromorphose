@@ -12,10 +12,14 @@ namespace OilSpill
 		public bool RaceFinished { get; private set; }
 
 		[SerializeField] private float time;
+		[SerializeField] private ulong goal;
 
 		[SerializeField] private GameObject timeTextObj;
 		[SerializeField] private GameObject moneyTextObj;
 		[SerializeField] private GameObject infoTextObj;
+		[SerializeField] private GameObject fuelTankUI;
+		[SerializeField] private Image fuelIndicator;
+		[SerializeField] private UIBasicAlert alertWindow;
 
 		private GameObject[] _cars;
 		private GameObject _playerObj;
@@ -28,6 +32,7 @@ namespace OilSpill
 		private ulong money = 0;
 		private uint moneyTenThousand = 0;			// Counts the ten-thousands money - for money feedback
 		private bool timerFeedback = false;
+		private bool reachedGoal = false;
 
 		// Before load
 		void Awake()
@@ -67,13 +72,6 @@ namespace OilSpill
 			// GUI elements
 			timeText = timeTextObj.GetComponent<Text>();
 			moneyText = moneyTextObj.GetComponent<Text>();
-
-			// Race start countdown
-			RaceStarted = false;
-			StartCoroutine(StartCountdown());
-
-			// Start money count coroutine
-			moneyCount = StartCoroutine(FuelToMoney());
 		}
 		
 		// GUI
@@ -110,8 +108,48 @@ namespace OilSpill
 				moneyTenThousand = (uint)(money / 10000);
 				StartCoroutine(moneyTextObj.GetComponent<UIEffects>().DuplicateFade());
 			}
+
+			// Fuel indicator
+			bool driving = !_playerObj.activeInHierarchy;
+
+			if(driving)
+			{
+				if(!fuelTankUI.activeInHierarchy)
+					fuelTankUI.SetActive(true);
+
+				// Get driving car
+				_cars = GameObject.FindGameObjectsWithTag("Vehicle");
+
+				// Iterate through cars
+				foreach(GameObject car in _cars)
+				{
+					// Is car used?
+					if(car.GetComponent<Car>().IsUsed)
+					{
+						// Add money for fuel consumption
+						fuelIndicator.rectTransform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, (car.GetComponent<Car>().Fuel / 100f) * 106f - 53f));
+						break;
+					}
+				}
+			}
+			else if(fuelTankUI.activeInHierarchy)
+				fuelTankUI.SetActive(false);
 		}
 
+
+		// Start eace
+		public void StartRace()
+		{
+			if(RaceStarted)
+				return;
+			
+			// Race start countdown
+			RaceStarted = false;
+			StartCoroutine(StartCountdown());
+
+			// Start money count coroutine
+			moneyCount = StartCoroutine(FuelToMoney());
+		}
 
 		// Finish line
 		public void FinishRace()
@@ -146,6 +184,36 @@ namespace OilSpill
 				_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
 			}
 
+			// Reached goal?
+			if((ulong)(time * 1000f) + money >= goal)
+			{
+				alertWindow.Title = "Congratulations!";
+				alertWindow.ButtonText = "Next";
+			}
+			else
+			{
+				alertWindow.Title = "Mission failed!";
+				alertWindow.ButtonText = "Retry";
+			}
+
+			// Display text
+			alertWindow.Text = "Earned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+				"\nTime bonus:\t\t\t\t\t\t\t\t" + (time * 1000f).ToString("N0") + "$" +
+				"\n\nTotal:\t\t\t\t\t\t\t\t\t\t\t" + ((time * 1000f) + money).ToString("N0") + "$";
+
+			// Calculate money
+			money += (ulong)(time * 1000f);
+
+			// Display end screen
+			Invoke("EndScreen", 2f);
+
+		}
+
+		// End screen
+		void EndScreen()
+		{
+			time = 0f;
+			alertWindow.gameObject.SetActive(true);
 		}
 
 
