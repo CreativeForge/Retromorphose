@@ -16,10 +16,13 @@ namespace OilSpill
 
 		[SerializeField] private GameObject timeTextObj;
 		[SerializeField] private GameObject moneyTextObj;
+		[SerializeField] private GameObject goalTextObj;
 		[SerializeField] private GameObject infoTextObj;
 		[SerializeField] private GameObject fuelTankUI;
 		[SerializeField] private Image fuelIndicator;
 		[SerializeField] private UIBasicAlert alertWindow;
+
+		[SerializeField] private Image[] countdownImages;
 
 		private GameObject[] _cars;
 		private GameObject _playerObj;
@@ -27,6 +30,7 @@ namespace OilSpill
 		private Text infoText;
 		private Text timeText;
 		private Text moneyText;
+		private Text goalText;
 		private Coroutine moneyCount;
 
 		private ulong money = 0;
@@ -72,13 +76,17 @@ namespace OilSpill
 			// GUI elements
 			timeText = timeTextObj.GetComponent<Text>();
 			moneyText = moneyTextObj.GetComponent<Text>();
+			goalText = goalTextObj.GetComponent<Text>();
+
+			// GUI write goal
+			goalText.text = "Earn at least " + goal.ToString("N0") + "$";
 		}
 		
 		// GUI
 		void Update()
 		{
 			// Count time
-			if(RaceStarted)
+			if(RaceStarted && !RaceFinished)
 			{
 				if(time > 0)
 					time -= Time.deltaTime;
@@ -107,6 +115,14 @@ namespace OilSpill
 			{
 				moneyTenThousand = (uint)(money / 10000);
 				StartCoroutine(moneyTextObj.GetComponent<UIEffects>().DuplicateFade());
+			}
+
+			// Green goal text if reached
+			if((money >= goal) && !reachedGoal)
+			{
+				goalText.color = new Color(0f, 0.7f, 0f);
+				reachedGoal = true;
+				StartCoroutine(goalTextObj.GetComponent<UIEffects>().DuplicateFade());
 			}
 
 			// Fuel indicator
@@ -221,7 +237,7 @@ namespace OilSpill
 		// Money per fuel consumption
 		IEnumerator FuelToMoney()
 		{
-			while(true)
+			while(!RaceFinished)
 			{
 				bool driving = !_playerObj.activeInHierarchy;
 
@@ -250,7 +266,7 @@ namespace OilSpill
 		// Not much time left
 		IEnumerator TimerFeedback()
 		{
-			while(time <= 10f)
+			while((time <= 10f) && !RaceFinished)
 			{
 				StartCoroutine(timeTextObj.GetComponent<UIEffects>().ScaleFeedback());
 				yield return new WaitForSeconds(1f);
@@ -263,20 +279,17 @@ namespace OilSpill
 		// Race countdown
 		IEnumerator StartCountdown()
 		{
-			// 3
-			print(3);
+			// Ready
+			StartCoroutine(CountdownEffect(0, 10f));
 			yield return new WaitForSeconds(1f);
-			// 2
-			print(2);
-			yield return new WaitForSeconds(1f);
-			// 1
-			print(1);
+			// Set
+			StartCoroutine(CountdownEffect(1, -10f));
 			yield return new WaitForSeconds(1f);
 			// Go
-			print("GO!");
+			StartCoroutine(CountdownEffect(2, 10f));
+			yield return new WaitForSeconds(0.2f);
 			_playerObj.GetComponent<PlayerPrototype>().CanMove = true;
 			RaceStarted = true;
-
 		}
 
 		// Exit the car after delay and finish race
@@ -288,6 +301,35 @@ namespace OilSpill
 			{
 				car.GetComponent<Car>().StopVehicle();
 				_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
+			}
+		}
+
+		// Countdown
+		public IEnumerator CountdownEffect(int index, float rotation)
+		{
+			Vector3 newScale = Vector3.one * 5f;
+			Quaternion newRotation = Quaternion.Euler(Vector3.forward * rotation);
+			float elapsedTime = 0f;
+
+			countdownImages[index].rectTransform.localRotation = newRotation;
+			countdownImages[index].rectTransform.localScale = newScale;
+			countdownImages[index].gameObject.SetActive(true);
+
+			// Not already scaled
+			if(transform.localScale.Equals(Vector3.one))
+			{
+				// Scale up
+				while(elapsedTime < 0.5f)
+				{
+					countdownImages[index].rectTransform.localScale = Vector3.Lerp(newScale, Vector3.one, elapsedTime * 2);
+					countdownImages[index].rectTransform.localRotation = Quaternion.Lerp(newRotation, Quaternion.identity, elapsedTime * 2);
+					elapsedTime += Time.deltaTime;
+					yield return new WaitForEndOfFrame();
+				}
+
+				// Wait some more
+				yield return new WaitForSeconds(0.5f);
+				countdownImages[index].gameObject.SetActive(false);
 			}
 		}
 	}

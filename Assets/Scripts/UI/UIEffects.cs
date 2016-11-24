@@ -21,7 +21,7 @@ public class UIEffects : MonoBehaviour
 	public IEnumerator ScaleFeedback()
 	{
 		Vector3 newScale = Vector3.one * scaleSize;
-		float elapsedTime = 0;
+		float elapsedTime = 0f;
 
 		// Not already scaled
 		if(transform.localScale.Equals(Vector3.one))
@@ -36,7 +36,7 @@ public class UIEffects : MonoBehaviour
 
 			// Scale down
 			transform.localScale = newScale;
-			elapsedTime = 0;
+			elapsedTime = 0f;
 
 			while(elapsedTime < scaleTime)
 			{
@@ -55,7 +55,7 @@ public class UIEffects : MonoBehaviour
 		GameObject duplicate = Instantiate(gameObject, transform.parent) as GameObject;
 		Vector3 newScale = Vector3.one * duplicateSize;
 		float newAlpha = 1f;
-		float elapsedTime = 0;
+		float elapsedTime = 0f;
 
 		// Remove this script from duplicate
 		Destroy(duplicate.GetComponent<UIEffects>());
