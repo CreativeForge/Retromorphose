@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 namespace OilSpill
@@ -93,6 +94,12 @@ namespace OilSpill
 				else
 					Time.timeScale = 0f;
 			}
+
+			// Restart debug
+			/*
+			if(Input.GetKeyDown(KeyCode.Backspace))
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			*/
 		}
 
 		// GUI Update
