@@ -131,7 +131,7 @@ namespace OilSpill
 		void FixedUpdate()
 		{
 			// Player movement
-			if(!canMove)
+			if(!canMove || GameLogicPrototype.Main.RaceFinished)
 				return;
 
 			Vector3 direction = new Vector3(-Input.GetAxis("P" + playerID.ToString() + " Vertical"), 0f, Input.GetAxis("P" + playerID.ToString() + " Horizontal"));

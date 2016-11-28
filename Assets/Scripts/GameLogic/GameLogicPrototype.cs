@@ -89,10 +89,7 @@ namespace OilSpill
 			// Count time
 			if(RaceStarted && !RaceFinished)
 			{
-				if(time > 0)
-					time -= Time.deltaTime;
-				else
-					Time.timeScale = 0f;
+				time += Time.deltaTime;
 			}
 
 			// Restart debug
@@ -108,6 +105,8 @@ namespace OilSpill
 			moneyText.text = money.ToString("N0") + "$";
 			timeText.text = "Timer: " + time.ToString("F1") + "s";
 
+			// Timer feedback
+			/*
 			if((time <= 10) && !timerFeedback)
 			{
 				timerFeedback = true;
@@ -116,6 +115,7 @@ namespace OilSpill
 				timeText.color = new Color(0.8f, 0f, 0f);
 				StartCoroutine(TimerFeedback());
 			}
+			*/
 
 			// Money feedback? Every ten-thousand
 			if((money / 10000) > moneyTenThousand)
@@ -160,7 +160,7 @@ namespace OilSpill
 		}
 
 
-		// Start eace
+		// Start race
 		public void StartRace()
 		{
 			if(RaceStarted)
