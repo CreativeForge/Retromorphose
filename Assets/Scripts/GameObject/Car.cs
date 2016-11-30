@@ -121,7 +121,7 @@ namespace OilSpill
 
 
 		// Triggers
-		protected void OnTriggerEnter(Collider other)
+		private void OnTriggerEnter(Collider other)
 		{
 			switch(other.tag)
 			{

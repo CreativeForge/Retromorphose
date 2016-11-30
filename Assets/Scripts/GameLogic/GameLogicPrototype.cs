@@ -43,6 +43,9 @@ namespace OilSpill
 		void Awake()
 		{
 			// Existing GameLogic?
+			// [Edit] not master logic...
+			Main = this;
+			/*
 			if(Main != null)
 			{
 				print("[OilSpill] GameLogic: Destroying doubles.");
@@ -57,6 +60,7 @@ namespace OilSpill
 
 				print("[OilSpill] " + GameLogicPrototype.Main.name + "is now assigned as GameLogic.");
 			}
+			*/
 
 			// Default values properties
 			RaceStarted = false;
@@ -160,6 +164,37 @@ namespace OilSpill
 		}
 
 
+		// Load new or retry old level
+		public void LoadLevel()
+		{
+			// Start race if not started yet?
+			if(!RaceStarted)
+			{
+				StartRace();
+			}
+			// Load new or retry current level
+			else if(RaceFinished)
+			{
+				int nextSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+				ResetLogic();
+
+				if(reachedGoal)
+				{
+					nextSceneIndex++;
+
+					if(SceneManager.sceneCountInBuildSettings > nextSceneIndex)
+						SceneManager.LoadScene(nextSceneIndex);
+					else
+						print("Load main menu...");
+				}
+				else
+				{
+					SceneManager.LoadScene(nextSceneIndex);
+				}
+			}
+		}
+
 		// Start race
 		public void StartRace()
 		{
@@ -208,7 +243,7 @@ namespace OilSpill
 			}
 
 			// Reached goal?
-			if((ulong)(time * 1000f) + money >= goal)
+			if(reachedGoal)
 			{
 				alertWindow.Title = "Congratulations!";
 				alertWindow.ButtonText = "Next";
@@ -221,15 +256,25 @@ namespace OilSpill
 
 			// Display text
 			alertWindow.Text = "Earned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
-				"\nTime bonus:\t\t\t\t\t\t\t\t" + (time * 1000f).ToString("N0") + "$" +
-				"\n\nTotal:\t\t\t\t\t\t\t\t\t\t\t" + ((time * 1000f) + money).ToString("N0") + "$";
-
-			// Calculate money
-			money += (ulong)(time * 1000f);
+				"\nTime:\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1");
+				//"\n\nTotal:\t\t\t\t\t\t\t\t\t\t\t" + ((time * 1000f) + money).ToString("N0") + "$";
 
 			// Display end screen
 			Invoke("EndScreen", 2f);
+		}
 
+		// Reset game logic
+		public void ResetLogic()
+		{
+			// Reset values
+			time = 0f;
+			money = 0;
+			moneyTenThousand = 0;
+			timerFeedback = false;
+			reachedGoal = false;
+
+			// Stop running coroutines
+			StopCoroutine(moneyCount);
 		}
 
 		// End screen

@@ -419,5 +419,14 @@ namespace OilSpill
 		{
 			get { return this.damage; }
 		}
+
+		/// <summary>
+		/// Gets the cars rpm.
+		/// </summary>
+		/// <value>Current RPM.</value>
+		public float RPM
+		{
+			get { return (wheelColliders[2].rpm > wheelColliders[3].rpm) ? wheelColliders[2].rpm : wheelColliders[3].rpm; }
+		}
 	}
 }
