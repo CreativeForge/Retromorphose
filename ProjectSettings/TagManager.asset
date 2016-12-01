@@ -8,6 +8,7 @@ TagManager:
   - Vehicle
   - VehicleDoor
   - Invisible
+  - MusicController
   layers:
   - Default
   - TransparentFX

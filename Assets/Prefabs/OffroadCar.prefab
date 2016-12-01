@@ -752,9 +752,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 200
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -852,6 +852,10 @@ MonoBehaviour:
   explosion: {fileID: 1000013961593098, guid: b51ee1d2851b842a1a80a3c19d1ccd93, type: 2}
   explosionRadius: 20
   explosionForce: 50
+  crashSounds:
+  - {fileID: 8300000, guid: f60fe8d9794654e308e0c08bb02aa545, type: 3}
+  - {fileID: 8300000, guid: 11afc2c6926d746a08ae2f4cbbb7143a, type: 3}
+  - {fileID: 8300000, guid: 814d6e63021d0495e819143f0d385f40, type: 3}
 --- !u!114 &114000011331882202
 MonoBehaviour:
   m_ObjectHideFlags: 1

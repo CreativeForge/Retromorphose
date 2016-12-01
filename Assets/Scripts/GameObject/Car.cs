@@ -8,8 +8,10 @@ namespace OilSpill
 		[SerializeField] private GameObject explosion;
 		[SerializeField] private float explosionRadius = 10f;
 		[SerializeField] private float explosionForce = 10f;
+		[SerializeField] private AudioClip[] crashSounds;
 
 		private ParticleSystem _dollarEmitter;
+		private AudioSource _audioSource;
 
 
 		// Start routine
@@ -17,6 +19,7 @@ namespace OilSpill
 		{
 			base.Start();
 			_dollarEmitter = GetComponentsInChildren<ParticleSystem>()[1];
+			_audioSource = GetComponent<AudioSource>();
 		}
 
 		// Every frame
@@ -113,6 +116,7 @@ namespace OilSpill
 					if(damageMulti > 5f)
 					{
 						MakeDamage(damageMulti);
+						_audioSource.PlayOneShot(crashSounds[Random.Range(0, crashSounds.Length)]);
 					}
 
 					break;

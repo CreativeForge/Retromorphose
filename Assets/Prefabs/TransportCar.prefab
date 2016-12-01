@@ -21,8 +21,11 @@ GameObject:
   - 4: {fileID: 4000013516090690}
   - 54: {fileID: 54000014088825260}
   - 65: {fileID: 65000010819890122}
+  - 82: {fileID: 82000011572504540}
   - 114: {fileID: 114000010194878604}
+  - 114: {fileID: 114000011369383994}
   - 114: {fileID: 114000010444345290}
+  - 114: {fileID: 114000012402202596}
   m_Layer: 0
   m_Name: TransportCar
   m_TagString: Vehicle
@@ -469,7 +472,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010509875990}
   m_LocalRotation: {x: -0, y: -0.9831965, z: -0, w: 0.18255048}
-  m_LocalPosition: {x: 2.9419665, y: 0.25537473, z: 11.5064745}
+  m_LocalPosition: {x: -1.8468723, y: 0.2143181, z: 50.54859}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: -159.23001, z: 0}
   m_Children:
@@ -729,6 +732,81 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 0.8, z: 0.8}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &82000011572504540
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010509875990}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243000010688762204, guid: fb326f9df01f3474cb5d130e4fa50183,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 79eaa8db0386a4bb5a1cb7153442d09c, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 200
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114000010194878604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -761,6 +839,10 @@ MonoBehaviour:
   explosion: {fileID: 1000013961593098, guid: b51ee1d2851b842a1a80a3c19d1ccd93, type: 2}
   explosionRadius: 20
   explosionForce: 50
+  crashSounds:
+  - {fileID: 8300000, guid: f60fe8d9794654e308e0c08bb02aa545, type: 3}
+  - {fileID: 8300000, guid: 11afc2c6926d746a08ae2f4cbbb7143a, type: 3}
+  - {fileID: 8300000, guid: 814d6e63021d0495e819143f0d385f40, type: 3}
 --- !u!114 &114000010444345290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -774,6 +856,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: {x: 80, y: 5}
   offset: 80
+--- !u!114 &114000011369383994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010509875990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66108af587afb417d995e47a73596ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pitchInfluence: 0.8
+  startCar: {fileID: 8300000, guid: ab5f7aff7f7654d8295a8f33d5f0ac8b, type: 3}
+  stopCar: {fileID: 8300000, guid: 8ca696bee33a9488696f491432dcd034, type: 3}
+--- !u!114 &114000012402202596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010509875990}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7889ca5a3f2954c449eb7717db8951c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintImage: {fileID: 2800000, guid: fe3d30be6ca8d40f091fa18fecea52f8, type: 3}
+  imageWidth: 0
+  offset: 130
 --- !u!146 &146000010094425500
 WheelCollider:
   m_ObjectHideFlags: 1
