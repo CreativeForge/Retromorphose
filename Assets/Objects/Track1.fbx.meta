@@ -151,6 +151,11 @@ ModelImporter:
     100286: Cliff3.056
     100288: Cliff3.057
     100290: //RootNode
+    100292: Border
+    100294: Ground
+    100296: Mountain
+    100298: Mountain.001
+    100300: Ramp
     400000: Cliff1
     400002: Cliff1.001
     400004: Cliff1.002
@@ -297,6 +302,11 @@ ModelImporter:
     400286: Cliff3.056
     400288: Cliff3.057
     400290: //RootNode
+    400292: Border
+    400294: Ground
+    400296: Mountain
+    400298: Mountain.001
+    400300: Ramp
     2300000: Cliff1
     2300002: Cliff1.001
     2300004: Cliff1.002
@@ -442,6 +452,11 @@ ModelImporter:
     2300284: Cliff3.055
     2300286: Cliff3.056
     2300288: Cliff3.057
+    2300290: Border
+    2300292: Ground
+    2300294: Mountain
+    2300296: Mountain.001
+    2300298: Ramp
     3300000: Cliff1
     3300002: Cliff1.001
     3300004: Cliff1.002
@@ -587,6 +602,11 @@ ModelImporter:
     3300284: Cliff3.055
     3300286: Cliff3.056
     3300288: Cliff3.057
+    3300290: Border
+    3300292: Ground
+    3300294: Mountain
+    3300296: Mountain.001
+    3300298: Ramp
     4300000: Cliff3.057
     4300002: Cliff3.056
     4300004: Cliff3.055
@@ -732,6 +752,11 @@ ModelImporter:
     4300284: Cliff3
     4300286: Cliff2
     4300288: Cliff1
+    4300290: Mountain.001
+    4300292: Mountain
+    4300294: Border
+    4300296: Ground
+    4300298: Ramp
   materials:
     importMaterials: 1
     materialName: 0

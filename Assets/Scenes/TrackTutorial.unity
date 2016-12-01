@@ -2608,6 +2608,93 @@ Transform:
   - {fileID: 1202930202}
   m_Father: {fileID: 0}
   m_RootOrder: 7
+--- !u!1001 &1654746860
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000011513970662, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: timeTextObj
+      value: 
+      objectReference: {fileID: 2054164681}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: moneyTextObj
+      value: 
+      objectReference: {fileID: 1960545197}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: goalTextObj
+      value: 
+      objectReference: {fileID: 359618622}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: fuelTankUI
+      value: 
+      objectReference: {fileID: 1144917654}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: fuelIndicator
+      value: 
+      objectReference: {fileID: 1159417168}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: alertWindow
+      value: 
+      objectReference: {fileID: 1376892597}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: countdownImages.Array.data[0]
+      value: 
+      objectReference: {fileID: 1424514767}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: countdownImages.Array.data[1]
+      value: 
+      objectReference: {fileID: 1792301678}
+    - target: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+        type: 2}
+      propertyPath: countdownImages.Array.data[2]
+      value: 
+      objectReference: {fileID: 1000392534}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 83f6ddcb00def8b43ab2619622685d03, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1662020939
 GameObject:
   m_ObjectHideFlags: 0
@@ -2942,146 +3029,12 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 1
   m_Mesh: {fileID: 4300000, guid: 8e613fdcaa081a343a32b58eb86e97cb, type: 3}
---- !u!1 &1931868872
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1931868874}
-  - 82: {fileID: 1931868876}
-  - 114: {fileID: 1931868873}
-  - 114: {fileID: 1931868875}
-  m_Layer: 0
-  m_Name: GameLogic
-  m_TagString: GameController
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1931868873
+--- !u!114 &1931868873 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1931868872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
+  m_PrefabParentObject: {fileID: 114000012571566346, guid: 83f6ddcb00def8b43ab2619622685d03,
+    type: 2}
+  m_PrefabInternal: {fileID: 1654746860}
   m_Script: {fileID: 11500000, guid: 17a8bd721aede42beb9d0f9e17126dc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  time: 0
-  goal: 60000
-  timeTextObj: {fileID: 2054164681}
-  moneyTextObj: {fileID: 1960545197}
-  goalTextObj: {fileID: 359618622}
-  infoTextObj: {fileID: 0}
-  fuelTankUI: {fileID: 1144917654}
-  fuelIndicator: {fileID: 1159417168}
-  alertWindow: {fileID: 1376892597}
-  countdownImages:
-  - {fileID: 1424514767}
-  - {fileID: 1792301678}
-  - {fileID: 1000392534}
---- !u!4 &1931868874
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1931868872}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
---- !u!114 &1931868875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1931868872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74c1b9341c86440728ad75cd82995d05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!82 &1931868876
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1931868872}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 082747df38db847ba924c03383eb90c1, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!1001 &1944391259
 Prefab:
   m_ObjectHideFlags: 0

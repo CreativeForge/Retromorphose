@@ -471,10 +471,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011470765144}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.09, y: 0.71, z: 0.0341868}
+  m_LocalRotation: {x: 0, y: -0.32375234, z: 0, w: 0.94614184}
+  m_LocalPosition: {x: -5.02, y: 1, z: -565.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -37.78, z: 0}
   m_Children:
   - {fileID: 4000010104246712}
   - {fileID: 4000011708044710}
@@ -630,7 +630,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 720965f5ed1b2443096f9b87912aad12, type: 2}
+  - {fileID: 2100000, guid: a5175179428971b4db6b24df420beb45, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -859,7 +859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd3e69d59a227418fb29c498f7db6827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSteeringAngle: 16
+  maxSteeringAngle: 15
   maxTorque: 50
   wheelFriction: 20
   centerOfMass: {fileID: 4000010430940678}
@@ -873,7 +873,7 @@ MonoBehaviour:
   - {fileID: 4000013048574956}
   - {fileID: 4000013268606692}
   - {fileID: 4000012364623646}
-  fuel: 60
+  fuel: 100
   consumptionMultiplier: 1.4
   damage: 0
   collisionMultiplier: 2

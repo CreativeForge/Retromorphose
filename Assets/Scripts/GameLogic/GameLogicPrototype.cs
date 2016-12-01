@@ -107,7 +107,7 @@ namespace OilSpill
 		void OnGUI()
 		{
 			moneyText.text = money.ToString("N0") + "$";
-			timeText.text = "Timer: " + time.ToString("F1") + "s";
+			timeText.text = "Time: " + time.ToString("F1") + "s";
 
 			// Timer feedback
 			/*
@@ -177,11 +177,10 @@ namespace OilSpill
 			{
 				int nextSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-				ResetLogic();
-
 				if(reachedGoal)
 				{
 					nextSceneIndex++;
+					ResetLogic();
 
 					if(SceneManager.sceneCountInBuildSettings > nextSceneIndex)
 						SceneManager.LoadScene(nextSceneIndex);
@@ -190,6 +189,7 @@ namespace OilSpill
 				}
 				else
 				{
+					ResetLogic();
 					SceneManager.LoadScene(nextSceneIndex);
 				}
 			}
@@ -246,18 +246,19 @@ namespace OilSpill
 			if(reachedGoal)
 			{
 				alertWindow.Title = "Congratulations!";
+				alertWindow.Text = "The investors are very happy!" +
+					"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+					"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
 				alertWindow.ButtonText = "Next";
 			}
 			else
 			{
 				alertWindow.Title = "Mission failed!";
+				alertWindow.Text = "Drive more, walk less!" +
+					"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+					"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
 				alertWindow.ButtonText = "Retry";
 			}
-
-			// Display text
-			alertWindow.Text = "Earned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
-				"\nTime:\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1");
-				//"\n\nTotal:\t\t\t\t\t\t\t\t\t\t\t" + ((time * 1000f) + money).ToString("N0") + "$";
 
 			// Display end screen
 			Invoke("EndScreen", 2f);

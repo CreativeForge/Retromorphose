@@ -270,7 +270,8 @@ namespace OilSpill
 
 			// Change to vehicle
 			this.playerObject.SetActive(false);
-			this.isUsed = true;
+			//this.isUsed = true;
+			StartCoroutine(ReleaseVehicle());
 			_smokeEmitter.Play();
 
 			// Camera follow
@@ -323,6 +324,15 @@ namespace OilSpill
 
 			// Stop smoke
 			_smokeEmitter.Stop();
+		}
+
+		/// <summary>
+		/// Enables driving. Used for coroutines.
+		/// </summary>
+		protected IEnumerator ReleaseVehicle()
+		{
+			yield return new WaitForEndOfFrame();
+			this.isUsed = true;
 		}
 
 		/// <summary>
