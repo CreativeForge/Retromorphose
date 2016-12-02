@@ -111,6 +111,15 @@ namespace OilSpill
 			// Restart debug
 			if(Input.GetKeyDown(KeyCode.Escape))
 				SceneManager.LoadScene("Menu");
+
+			if(Input.GetKeyDown(KeyCode.Alpha1))
+				SceneManager.LoadScene("Track1");
+
+			if(Input.GetKeyDown(KeyCode.Alpha2))
+				SceneManager.LoadScene("Track2");
+
+			if(Input.GetKeyDown(KeyCode.Alpha3))
+				SceneManager.LoadScene("Track3");
 			
 		}
 
