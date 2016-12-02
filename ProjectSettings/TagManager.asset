@@ -9,6 +9,7 @@ TagManager:
   - VehicleDoor
   - Invisible
   - MusicController
+  - Barrel
   layers:
   - Default
   - TransparentFX

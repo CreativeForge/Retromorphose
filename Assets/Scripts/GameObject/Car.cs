@@ -8,6 +8,8 @@ namespace OilSpill
 		[SerializeField] private GameObject explosion;
 		[SerializeField] private float explosionRadius = 10f;
 		[SerializeField] private float explosionForce = 10f;
+		[SerializeField] private GameObject explosionBonus;
+		[SerializeField] private ulong bonusValue = 10000;
 		[SerializeField] private AudioClip[] crashSounds;
 
 		private ParticleSystem _dollarEmitter;
@@ -76,6 +78,10 @@ namespace OilSpill
 		public override void Explode()
 		{
 			Instantiate(explosion, transform.position, transform.rotation);
+			Instantiate(explosionBonus, transform.position + (Vector3.up * 4f), Quaternion.Euler(Vector3.down * 90f));
+
+			// Add explosion bonus
+			GameLogicPrototype.Main.BonusMoney(bonusValue);
 
 			if(isUsed)
 				StopVehicle();
@@ -101,17 +107,33 @@ namespace OilSpill
 		// Collision
 		protected override void OnCollisionEnter(Collision collisionInfo)
 		{
+			float impact, damageMulti;
+
 			switch(collisionInfo.gameObject.tag)
 			{
 				case "Player":
 				case "Invisible":
 					break;
 				
+				// Barrel damage
+				case "Barrel":
+
+					impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
+					damageMulti = Mathf.Abs(impact * _rigidbody.mass * 0.05f) * collisionMultiplier;
+
+					if(damageMulti > 5f)
+					{
+						MakeDamage(damageMulti * 0.2f);
+						_audioSource.PlayOneShot(crashSounds[Random.Range(0, crashSounds.Length)]);
+					}
+
+					break;
+				
 				// Make damage
 				default:
 					
-					float impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
-					float damageMulti = Mathf.Abs(impact * _rigidbody.mass * 0.05f) * collisionMultiplier;
+					impact = Vector3.Dot(collisionInfo.contacts[0].normal, collisionInfo.relativeVelocity);
+					damageMulti = Mathf.Abs(impact * _rigidbody.mass * 0.05f) * collisionMultiplier;
 
 					if(damageMulti > 5f)
 					{

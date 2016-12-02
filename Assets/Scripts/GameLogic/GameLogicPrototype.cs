@@ -14,6 +14,7 @@ namespace OilSpill
 
 		[SerializeField] private float time;
 		[SerializeField] private ulong goal;
+		[SerializeField] private bool timeLimit = false;
 
 		[SerializeField] private GameObject timeTextObj;
 		[SerializeField] private GameObject moneyTextObj;
@@ -38,6 +39,7 @@ namespace OilSpill
 		private uint moneyTenThousand = 0;			// Counts the ten-thousands money - for money feedback
 		private bool timerFeedback = false;
 		private bool reachedGoal = false;
+		private float startTime = 0f;
 
 		// Before load
 		void Awake()
@@ -85,6 +87,9 @@ namespace OilSpill
 
 			// GUI write goal
 			goalText.text = "Earn at least " + goal.ToString("N0") + "$";
+
+			// Set start time
+			startTime = time;
 		}
 		
 		// GUI
@@ -93,14 +98,20 @@ namespace OilSpill
 			// Count time
 			if(RaceStarted && !RaceFinished)
 			{
-				time += Time.deltaTime;
+				if(timeLimit)
+				{
+					time -= Time.deltaTime;
+				}
+				else
+				{
+					time += Time.deltaTime;
+				}
 			}
 
 			// Restart debug
-			/*
-			if(Input.GetKeyDown(KeyCode.Backspace))
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-			*/
+			if(Input.GetKeyDown(KeyCode.Escape))
+				SceneManager.LoadScene("Menu");
+			
 		}
 
 		// GUI Update
@@ -110,8 +121,7 @@ namespace OilSpill
 			timeText.text = "Time: " + time.ToString("F1") + "s";
 
 			// Timer feedback
-			/*
-			if((time <= 10) && !timerFeedback)
+			if((time <= 10) && timeLimit && !timerFeedback)
 			{
 				timerFeedback = true;
 
@@ -119,7 +129,6 @@ namespace OilSpill
 				timeText.color = new Color(0.8f, 0f, 0f);
 				StartCoroutine(TimerFeedback());
 			}
-			*/
 
 			// Money feedback? Every ten-thousand
 			if((money / 10000) > moneyTenThousand)
@@ -185,7 +194,7 @@ namespace OilSpill
 					if(SceneManager.sceneCountInBuildSettings > nextSceneIndex)
 						SceneManager.LoadScene(nextSceneIndex);
 					else
-						print("Load main menu...");
+						SceneManager.LoadScene("Menu");
 				}
 				else
 				{
@@ -242,26 +251,88 @@ namespace OilSpill
 				_playerObj.GetComponent<PlayerPrototype>().CanMove = false;
 			}
 
-			// Reached goal?
-			if(reachedGoal)
+			// Played with time limit?
+			if(timeLimit)
 			{
-				alertWindow.Title = "Congratulations!";
-				alertWindow.Text = "The investors are very happy!" +
-					"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
-					"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
-				alertWindow.ButtonText = "Next";
+				// Penalty?
+				if(time < 0)
+				{
+					float penalty = Mathf.Abs(time) * 1000f;
+					money -= (ulong)penalty;
+
+					if(money < goal)
+						reachedGoal = false;
+
+					// Reached goal?
+					if(reachedGoal)
+					{
+						alertWindow.Title = "Congratulations!";
+						alertWindow.Text = "The investors are very happy!" +
+							"\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+							"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + (startTime - time).ToString("F1") + " seconds" +
+							"\nTime penalty:\t\t\t\t\t\t\t-" + penalty.ToString("N0") + "$";
+						alertWindow.ButtonText = "Next";
+					}
+					else
+					{
+						alertWindow.Title = "Mission failed!";
+						alertWindow.Text = "Drive more, walk less!" +
+							"\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+							"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + (startTime - time).ToString("F1") + " seconds" +
+							"\nTime penalty:\t\t\t\t\t\t\t-" + penalty.ToString("N0") + "$";
+						alertWindow.ButtonText = "Retry";
+					}
+				}
+				else
+				{
+					// Reached goal?
+					if(reachedGoal)
+					{
+						alertWindow.Title = "Congratulations!";
+						alertWindow.Text = "The investors are very happy!" +
+							"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+							"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + (startTime - time).ToString("F1") + " seconds";
+						alertWindow.ButtonText = "Next";
+					}
+					else
+					{
+						alertWindow.Title = "Mission failed!";
+						alertWindow.Text = "Drive more, walk less!" +
+							"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+							"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + (startTime - time).ToString("F1") + " seconds";
+						alertWindow.ButtonText = "Retry";
+					}
+				}
 			}
 			else
 			{
-				alertWindow.Title = "Mission failed!";
-				alertWindow.Text = "Drive more, walk less!" +
-					"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
-					"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
-				alertWindow.ButtonText = "Retry";
+				// Reached goal?
+				if(reachedGoal)
+				{
+					alertWindow.Title = "Congratulations!";
+					alertWindow.Text = "The investors are very happy!" +
+						"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+						"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
+					alertWindow.ButtonText = "Next";
+				}
+				else
+				{
+					alertWindow.Title = "Mission failed!";
+					alertWindow.Text = "Drive more, walk less!" +
+						"\n\nEarned money:\t\t\t\t\t\t\t" + money.ToString("N0") + "$" +
+						"\nTime:\t\t\t\t\t\t\t\t\t\t\t" + time.ToString("F1") + " seconds";
+					alertWindow.ButtonText = "Retry";
+				}
 			}
 
 			// Display end screen
 			Invoke("EndScreen", 2f);
+		}
+
+		// Add bonus
+		public void BonusMoney(ulong bonus)
+		{
+			money += bonus;
 		}
 
 		// Reset game logic

@@ -24,6 +24,9 @@ namespace OilSpill
 			_sound = GetComponent<AudioSource>();
 
 			mainPitch = _sound.pitch;
+
+			// Out of fuel event
+			_car.NoFuel += OutOfFuel;
 		}
 		
 		// Update is called once per frame
@@ -41,8 +44,11 @@ namespace OilSpill
 				if(!carUsedBefore)
 				{
 					// Start car
-					_sound.PlayOneShot(startCar);
-					_sound.PlayDelayed(0.5f);
+					if(_car.Fuel > 0)
+					{
+						_sound.PlayOneShot(startCar);
+						_sound.PlayDelayed(0.5f);
+					}
 
 					carUsedBefore = true;
 				}
@@ -50,9 +56,19 @@ namespace OilSpill
 			else if(carUsedBefore)
 			{
 				_sound.Stop();
-				_sound.PlayOneShot(stopCar);
+
+				if(_car.Fuel > 0)
+					_sound.PlayOneShot(stopCar);
+				
 				carUsedBefore = false;
 			}
+		}
+
+		// When car out of fuel
+		protected void OutOfFuel(object sender, VehicleEventArgs e)
+		{
+			_sound.Stop();
+			_sound.PlayOneShot(stopCar);
 		}
 	}
 }
